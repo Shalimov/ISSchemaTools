@@ -55,6 +55,8 @@ ISSchemaTools = (function () {
 			var result = [];
 
 			for (var i = 0, length = array.length; i < length; i += 1) {
+				var val = array[i];
+				
 				if (val !== null && val !== undefined && val !== "" && val === val) {
 					result.push(array[i]);
 				}

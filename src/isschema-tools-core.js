@@ -105,9 +105,9 @@ ISSchemaTools = (function () {
 			var path = this.path.slice();
 			var level = path.push(key);
 			var node = createNode(val, key, path, level, this, null);
-			var isCircular = circularDepend.indexOf(val) === -1;
+			var isCircular = circularDepend.indexOf(val) !== -1;
 
-			if (!_.isFunction(val) && _.isObject(val) && isCircular) {
+			if (!_.isFunction(val) && _.isObject(val) && !isCircular) {
 				stack.push(node);
 				circularDepend.push(node);
 			}

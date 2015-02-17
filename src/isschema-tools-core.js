@@ -30,7 +30,7 @@ ISSchemaTools = (function () {
 			return isNull || val === undefined || val === "" || val !== val;
 		},
 
-		expectedTypeOrNull: function (val, type) {
+		isExpectedTypeOrNull: function (val, type) {
 			return val === null || val.constructor === type;
 		},
 
@@ -168,7 +168,7 @@ ISSchemaTools = (function () {
 			var value = node.value;
 			var pattern = node.pattern;
 
-			if (!_.isEmpty(value, allowNull, pattern.allowNull) && _.expectedTypeOrNull(value, pattern.type)) {
+			if (!_.isEmpty(value, allowNull, pattern.allowNull) && _.isExpectedTypeOrNull(value, pattern.type)) {
 
 				var pathes = node.path;
 				target = result;

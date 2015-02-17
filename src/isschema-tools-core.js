@@ -7,7 +7,7 @@ ISSchemaTools = (function () {
 		},
 
 		isObject: function (obj) {
-			return typeof obj === 'object' && obj !== null;
+			return obj !== null && typeof obj === 'object';
 		},
 
 		isNumber: function (n) {
@@ -75,7 +75,7 @@ ISSchemaTools = (function () {
 	};
 
 	function Rule(init) {
-		if (!_.isFunction(init.type)) throw new Error('Type must be defined');
+		if (!(_.isObject(init) && _.isFunction(init.type))) throw new Error('First argument must be an Object. Type must be defined.');
 		_.extend(this, init);
 	}
 

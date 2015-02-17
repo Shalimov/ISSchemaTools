@@ -214,7 +214,7 @@ ISSchemaTools = (function () {
 
 		return {
 			clean: (clean).bind(null, nodes)
-		}
+		};
 	};
 
 	_.extend(ISSchemaTools, {

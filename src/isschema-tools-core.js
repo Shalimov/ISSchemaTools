@@ -160,7 +160,7 @@ ISSchemaTools = (function () {
 
 	function clean(nodes, options) {
 		var target;
-		var result = {};
+		var root = {};
 		var compactCache = [];
 
 		options = options || {};
@@ -174,7 +174,7 @@ ISSchemaTools = (function () {
 			if (!_.isEmpty(value, allowNull, pattern.allowNull) && _.isExpectedTypeOrNull(value, pattern.type)) {
 
 				var pathes = node.path;
-				target = result;
+				target = root;
 
 				for (var i = 0, length = pathes.length; i < length; i += 1) {
 					var path = pathes[i];
@@ -206,7 +206,7 @@ ISSchemaTools = (function () {
 			t[tk] = _.compact(t[tk]);
 		});
 
-		return result;
+		return root;
 	}
 
 	function ISSchemaTools(obj, pattern) {

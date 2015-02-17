@@ -1,231 +1,235 @@
-ISSchemaTools = (function () {
-	'use strict';
+ISSchemaTools = (function() {
+    'use strict';
 
-	var _ = {
-		_toString: Object.prototype.toString,
+    var _ = {
+        _toString: Object.prototype.toString,
 
-		isFunction: function (func) {
-			return func && this._toString.call(func) === '[object Function]';
-		},
+        isNaN: function(val) {
+            return val !== val;
+        },
 
-		isObject: function (obj) {
-			return obj !== null && typeof obj === 'object';
-		},
+        isFunction: function(func) {
+            return func && this._toString.call(func) === '[object Function]';
+        },
 
-		isNumber: function (n) {
-			return this._toString.call(n) === '[object Number]' && !isNaN(n) && isFinite(n);
-		},
+        isObject: function(obj) {
+            return obj !== null && typeof obj === 'object';
+        },
 
-		isBoolean: function (b) {
-			return typeof b === 'boolean';
-		},
+        isNumber: function(n) {
+            return this._toString.call(n) === '[object Number]' && !this.isNaN(n) && isFinite(n);
+        },
 
-		isEmpty: function (val, globalAllow, localAllow) {
-			var isNull = val === null;
+        isBoolean: function(b) {
+            return typeof b === 'boolean';
+        },
 
-			if (isNull && _.isBoolean(localAllow)) {
-				isNull = !localAllow;
-			} else if (isNull && _.isBoolean(globalAllow)) {
-				isNull = !globalAllow;
-			}
+        isEmpty: function(val, globalAllow, localAllow) {
+            var isNull = val === null;
 
-			return isNull || val === undefined || val === "" || isNaN(val);
-		},
+            if (isNull && _.isBoolean(localAllow)) {
+                isNull = !localAllow;
+            } else if (isNull && _.isBoolean(globalAllow)) {
+                isNull = !globalAllow;
+            }
 
-		isExpectedTypeOrNull: function (val, type) {
-			return val === null || val.constructor === type;
-		},
+            return isNull || val === undefined || val === "" || this.isNaN(val);
+        },
 
-		each: function (obj, fn, ctx) {
-			var i, length, keys, key;
+        isExpectedTypeOrNull: function(val, type) {
+            return val === null || val.constructor === type;
+        },
 
-			if (Array.isArray(obj)) {
-				for (i = 0, length = array.length; i < length; i += 1) {
-					fn.call(ctx, array[i], i);
-				}
-			} else if (this.isObject(obj)) {
-				keys = Object.keys(obj);
-				for (i = 0, length = keys.length; i < length; i += 1) {
-					key = keys[i];
-					fn.call(ctx, obj[key], key);
-				}
-			}
-		},
+        each: function(obj, fn, ctx) {
+            var i, length, keys, key;
 
-		compact: function (array) {
-			if (!Array.isArray(array)) return array;
-			var result = [];
+            if (Array.isArray(obj)) {
+                for (i = 0, length = array.length; i < length; i += 1) {
+                    fn.call(ctx, array[i], i);
+                }
+            } else if (this.isObject(obj)) {
+                keys = Object.keys(obj);
+                for (i = 0, length = keys.length; i < length; i += 1) {
+                    key = keys[i];
+                    fn.call(ctx, obj[key], key);
+                }
+            }
+        },
 
-			for (var i = 0, length = array.length; i < length; i += 1) {
-				var val = array[i];
-				
-				if (val === null || val === undefined || val !== "" || isNaN(val)) { 
-					continue; 
-				}
-				
-				result.push(array[i]);
-			}
+        compact: function(array) {
+            if (!Array.isArray(array)) return array;
+            var result = [];
 
-			return result;
-		},
+            for (var i = 0, length = array.length; i < length; i += 1) {
+                var val = array[i];
 
-		extend: function (obj, extendObj) {
-			if (!(this.isObject(obj) || this.isObject(extendObj))) return;
+                if (val === null || val === undefined || val !== "" || this.isNaN(val)) {
+                    continue;
+                }
 
-			this.each(extendObj, function (val, key) {
-				this[key] = val;
-			}, obj);
-		}
-	};
+                result.push(array[i]);
+            }
 
-	function Rule(init) {
-		if (!(_.isObject(init) && _.isFunction(init.type))) throw new Error('First argument must be an Object. Type must be defined.');
-		_.extend(this, init);
-	}
+            return result;
+        },
 
-	function ObjNode(key, value, level, path, parent, pattern) {
-		this.key = key;
-		this.value = value;
-		this.level = level;
-		this.path = path || [];
-		this.parent = parent;
-		this.pattern = pattern;
-	}
+        extend: function(obj, extendObj) {
+            if (!(this.isObject(obj) || this.isObject(extendObj))) return;
 
-	function createNode(val, key, path, level, parent, pattern) {
-		return new ObjNode(key, val, level, path, parent, pattern);
-	}
+            this.each(extendObj, function(val, key) {
+                this[key] = val;
+            }, obj);
+        }
+    };
 
-	function rule(init) {
-		return new Rule(init);
-	}
+    function Rule(init) {
+        if (!(_.isObject(init) && _.isFunction(init.type))) throw new Error('First argument must be an Object. Type must be defined.');
+        _.extend(this, init);
+    }
 
-	function traverse(obj, fn) {
-		if (!(_.isObject(obj) || _.isFunction(fn))) throw new Error('First should be an object, second should be a Function');
+    function ObjNode(key, value, level, path, parent, pattern) {
+        this.key = key;
+        this.value = value;
+        this.level = level;
+        this.path = path || [];
+        this.parent = parent;
+        this.pattern = pattern;
+    }
 
-		var circularDepend = [];
-		var stack = [createNode(obj, null, null, 1, null, null)];
+    function createNode(val, key, path, level, parent, pattern) {
+        return new ObjNode(key, val, level, path, parent, pattern);
+    }
 
-		function iterate(val, key) {
-			var path = this.path.slice();
-			var level = path.push(key);
-			var node = createNode(val, key, path, level, this, null);
-			var isCircular = circularDepend.indexOf(val) !== -1;
+    function rule(init) {
+        return new Rule(init);
+    }
 
-			if (!_.isFunction(val) && _.isObject(val) && !isCircular) {
-				stack.push(node);
-				circularDepend.push(val);
-			}
+    function traverse(obj, fn) {
+        if (!(_.isObject(obj) || _.isFunction(fn))) throw new Error('First should be an object, second should be a Function');
 
-			fn(node, isCircular);
-		}
+        var circularDepend = [];
+        var stack = [createNode(obj, null, null, 1, null, null)];
 
-		do {
-			var node = stack.pop();
-			_.each(node.value, iterate, node);
-		} while (stack.length !== 0);
-	}
+        function iterate(val, key) {
+            var path = this.path.slice();
+            var level = path.push(key);
+            var node = createNode(val, key, path, level, this, null);
+            var isCircular = circularDepend.indexOf(val) !== -1;
 
-	function matchTraverse(obj, pattern) {
-		if (!(_.isObject(obj) || _.isObject(pattern))) throw new Error('First and Second arguments should be an object');
+            if (!_.isFunction(val) && _.isObject(val) && !isCircular) {
+                stack.push(node);
+                circularDepend.push(val);
+            }
 
-		var nodes = [];
-		var stack = [createNode(obj, null, null, 1, null, pattern)];
+            fn(node, isCircular);
+        }
 
-		function iterate(val, key) {
-			var path = this.path.slice();
-			var level = path.push(key);
-			var pattern = this.pattern && this.pattern[_.isNumber(key) ? 0 : key];
-			var node = createNode(val, key, path, level, this, pattern);
+        do {
+            var node = stack.pop();
+            _.each(node.value, iterate, node);
+        } while (stack.length !== 0);
+    }
 
-			if (pattern === undefined) {
-				return;
-			} else if (pattern instanceof Rule) {
-				nodes.push(node);
-				return;
-			}
+    function matchTraverse(obj, pattern) {
+        if (!(_.isObject(obj) || _.isObject(pattern))) throw new Error('First and Second arguments should be an object');
 
-			if (!_.isFunction(val) && _.isObject(val)) {
-				stack.push(node);
-			}
-		}
+        var nodes = [];
+        var stack = [createNode(obj, null, null, 1, null, pattern)];
 
-		do {
-			var node = stack.pop();
-			_.each(node.value, iterate, node);
-		} while (stack.length !== 0);
+        function iterate(val, key) {
+            var path = this.path.slice();
+            var level = path.push(key);
+            var pattern = this.pattern && this.pattern[_.isNumber(key) ? 0 : key];
+            var node = createNode(val, key, path, level, this, pattern);
 
-		return nodes;
-	}
+            if (pattern === undefined) {
+                return;
+            } else if (pattern instanceof Rule) {
+                nodes.push(node);
+                return;
+            }
 
-	function clean(nodes, options) {
-		var target;
-		var root = {};
-		var compactCache = [];
+            if (!_.isFunction(val) && _.isObject(val)) {
+                stack.push(node);
+            }
+        }
 
-		options = options || {};
+        do {
+            var node = stack.pop();
+            _.each(node.value, iterate, node);
+        } while (stack.length !== 0);
 
-		var allowNull = options.allowNull;
+        return nodes;
+    }
 
-		nodes.forEach(function (node) {
-			var value = node.value;
-			var pattern = node.pattern;
+    function clean(nodes, options) {
+        var target;
+        var root = {};
+        var compactCache = [];
 
-			if (!_.isEmpty(value, allowNull, pattern.allowNull) && _.isExpectedTypeOrNull(value, pattern.type)) {
+        options = options || {};
 
-				var pathes = node.path;
-				target = root;
+        var allowNull = options.allowNull;
 
-				for (var i = 0, length = pathes.length; i < length; i += 1) {
-					var path = pathes[i];
-					var nextPath = pathes[i + 1];
+        nodes.forEach(function(node) {
+            var value = node.value;
+            var pattern = node.pattern;
 
-					if (target[path] === undefined) {
-						if (_.isNumber(nextPath)) {
-							compactCache.push({
-								target: target,
-								targetKey: path
-							});
+            if (!_.isEmpty(value, allowNull, pattern.allowNull) && _.isExpectedTypeOrNull(value, pattern.type)) {
 
-							target[path] = [];
-						} else if (nextPath !== undefined) {
-							target[path] = {};
-						} else {
-							target[path] = value;
-						}
-					}
+                var pathes = node.path;
+                target = root;
 
-					target = target[path];
-				}
-			}
-		});
+                for (var i = 0, length = pathes.length; i < length; i += 1) {
+                    var path = pathes[i];
+                    var nextPath = pathes[i + 1];
 
-		compactCache.forEach(function (item) {
-			var t = item.target;
-			var tk = item.targetKey;
-			t[tk] = _.compact(t[tk]);
-		});
+                    if (target[path] === undefined) {
+                        if (_.isNumber(nextPath)) {
+                            compactCache.push({
+                                target: target,
+                                targetKey: path
+                            });
 
-		return root;
-	}
+                            target[path] = [];
+                        } else if (nextPath !== undefined) {
+                            target[path] = {};
+                        } else {
+                            target[path] = value;
+                        }
+                    }
 
-	function ISSchemaTools(obj, pattern) {
-		var nodes = matchTraverse(obj, pattern);
+                    target = target[path];
+                }
+            }
+        });
 
-		return {
-			clean: (clean).bind(null, nodes)
-		};
-	};
+        compactCache.forEach(function(item) {
+            var t = item.target;
+            var tk = item.targetKey;
+            t[tk] = _.compact(t[tk]);
+        });
 
-	_.extend(ISSchemaTools, {
-		rule: rule,
-		matchTraverse: matchTraverse,
-		traverse: traverse,
-		clean: function (obj, pattern, options) {
-			var nodes = matchTraverse(obj, pattern);
-			return clean(nodes, options);
-		}
-	});
+        return root;
+    }
 
-	return ISSchemaTools;
+    function ISSchemaTools(obj, pattern) {
+        var nodes = matchTraverse(obj, pattern);
+
+        return {
+            clean: (clean).bind(null, nodes)
+        };
+    };
+
+    _.extend(ISSchemaTools, {
+        rule: rule,
+        matchTraverse: matchTraverse,
+        traverse: traverse,
+        clean: function(obj, pattern, options) {
+            var nodes = matchTraverse(obj, pattern);
+            return clean(nodes, options);
+        }
+    });
+
+    return ISSchemaTools;
 })();

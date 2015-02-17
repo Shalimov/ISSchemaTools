@@ -27,7 +27,7 @@ ISSchemaTools = (function () {
 				isNull = !globalAllow;
 			}
 
-			return isNull || val === undefined || val === "" || val !== val;
+			return isNull || val === undefined || val === "" || isNaN(val);
 		},
 
 		isExpectedTypeOrNull: function (val, type) {
@@ -57,9 +57,11 @@ ISSchemaTools = (function () {
 			for (var i = 0, length = array.length; i < length; i += 1) {
 				var val = array[i];
 				
-				if (val !== null && val !== undefined && val !== "" && val === val) {
-					result.push(array[i]);
+				if (val === null || val === undefined || val !== "" || isNaN(val)) { 
+					continue; 
 				}
+				
+				result.push(array[i]);
 			}
 
 			return result;

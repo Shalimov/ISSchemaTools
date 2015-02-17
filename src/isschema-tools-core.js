@@ -1,4 +1,6 @@
 ISSchemaTools = (function () {
+	'use strict';
+
 	var _ = {
 		_toString: Object.prototype.toString,
 
@@ -35,7 +37,7 @@ ISSchemaTools = (function () {
 		},
 
 		each: function (obj, fn, ctx) {
-			var i, length, keys;
+			var i, length, keys, key;
 
 			if (Array.isArray(obj)) {
 				for (i = 0, length = array.length; i < length; i += 1) {
@@ -44,7 +46,7 @@ ISSchemaTools = (function () {
 			} else if (this.isObject(obj)) {
 				keys = Object.keys(obj);
 				for (i = 0, length = keys.length; i < length; i += 1) {
-					var key = keys[i];
+					key = keys[i];
 					fn.call(ctx, obj[key], key);
 				}
 			}
@@ -95,7 +97,6 @@ ISSchemaTools = (function () {
 	}
 
 	function rule(init) {
-		if (!_.isObject(init)) throw new Error('Rule should be an Object type');
 		return new Rule(init);
 	}
 

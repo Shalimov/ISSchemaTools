@@ -109,7 +109,7 @@ ISSchemaTools = (function () {
 
 			if (!_.isFunction(val) && _.isObject(val) && !isCircular) {
 				stack.push(node);
-				circularDepend.push(node);
+				circularDepend.push(val);
 			}
 
 			fn(node, isCircular);

@@ -40,35 +40,32 @@ ISSchemaTools = (function() {
             return val === null || val.constructor === type;
         },
 
-        each: function(obj, fn, ctx) {
+        each: function(instance, fn, ctx) {
             var i, length, keys, key;
 
-            if (Array.isArray(obj)) {
-                for (i = 0, length = array.length; i < length; i += 1) {
-                    fn.call(ctx, array[i], i);
+            if (Array.isArray(instance)) {
+                for (i = 0, length = instance.length; i < length; i += 1) {
+                    fn.call(ctx, instance[i], i);
                 }
-            } else if (this.isObject(obj)) {
-                keys = Object.keys(obj);
+            } else if (this.isObject(instance)) {
+                keys = Object.keys(instance);
+
                 for (i = 0, length = keys.length; i < length; i += 1) {
                     key = keys[i];
-                    fn.call(ctx, obj[key], key);
+                    fn.call(ctx, instance[key], key);
                 }
             }
         },
 
         compact: function(array) {
             if (!Array.isArray(array)) return array;
+
             var result = [];
-
-            for (var i = 0, length = array.length; i < length; i += 1) {
-                var val = array[i];
-
-                if (val === null || val === undefined || val !== "" || this.isNaN(val)) {
-                    continue;
+            this.each(array, function(val) {
+                if (!_.isEmpty(val)) {
+                    result.push(val);
                 }
-
-                result.push(array[i]);
-            }
+            });
 
             return result;
         },
@@ -105,7 +102,7 @@ ISSchemaTools = (function() {
     }
 
     function traverse(obj, fn) {
-        if (!(_.isObject(obj) || _.isFunction(fn))) throw new Error('First should be an object, second should be a Function');
+        if (!(_.isObject(obj) || _.isFunction(fn))) throw new Error('First should be an Object, second should be a Function');
 
         var circularDepend = [];
         var stack = [createNode(obj, null, null, 1, null, null)];
@@ -131,7 +128,7 @@ ISSchemaTools = (function() {
     }
 
     function matchTraverse(obj, pattern) {
-        if (!(_.isObject(obj) || _.isObject(pattern))) throw new Error('First and Second arguments should be an object');
+        if (!(_.isObject(obj) || _.isObject(pattern))) throw new Error('First and Second arguments should be an Object');
 
         var nodes = [];
         var stack = [createNode(obj, null, null, 1, null, pattern)];
@@ -213,23 +210,20 @@ ISSchemaTools = (function() {
         return root;
     }
 
-    function ISSchemaTools(obj, pattern) {
-        var nodes = matchTraverse(obj, pattern);
-
-        return {
-            clean: (clean).bind(null, nodes)
-        };
-    };
-
-    _.extend(ISSchemaTools, {
+    return {
         rule: rule,
         matchTraverse: matchTraverse,
         traverse: traverse,
         clean: function(obj, pattern, options) {
             var nodes = matchTraverse(obj, pattern);
             return clean(nodes, options);
-        }
-    });
+        },
+        chain: function(obj, pattern) {
+            var nodes = matchTraverse(obj, pattern);
 
-    return ISSchemaTools;
+            return {
+                clean: (clean).bind(null, nodes)
+            };
+        }
+    };
 })();

@@ -252,7 +252,7 @@ var ISSchemaTools = (function () {
     }
 
     function addToChain(methodName, method) {
-        if (chainNs.hasOwnProperty(moduleName)) {
+        if (chainNs.hasOwnProperty(methodName)) {
             throw new Error(_.format('Method [${name}] already exist in chain', {
                 name: methodName
             }));

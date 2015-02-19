@@ -1,6 +1,4 @@
-var t = require('./isschema-tools-core');
-
-t.defineExtension('transform', function (_, addToChain) {
+ISSchemaTools.defineExtension('transform', function (_, addToChain) {
 
     var self = this;
     var module = {};

@@ -210,8 +210,7 @@ var ISSchemaTools = (function () {
     }
 
     function build() {
-        var isRootArray = this._isRootArray;
-        var root = isRootArray ? [] : {};
+        var root = this._isRootArray ? [] : {};
         var compactCache = [];
         var target;
 
@@ -249,7 +248,7 @@ var ISSchemaTools = (function () {
             t[tk] = _.compact(t[tk]);
         });
 
-        return isRootArray ? _.compact(root) : root;
+        return root;
     }
 
     function addToChain(methodName, method) {

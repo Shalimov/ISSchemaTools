@@ -208,6 +208,37 @@ describe('test core methods of ISSchemaTools', function () {
 
     describe('test #clean functionality', function () {
 
+        it('test #matchTraverse functionality', function () {
+            var nodes = t.chain({
+                name: 'name',
+                surname: 'surname',
+                index: 1,
+                hidden: false
+            }, {
+                name: t.rule({
+                    type: String
+                }),
+                surname: t.rule({
+                    type: String
+                }),
+                index: t.rule({
+                    type: Number
+                }),
+                data: {
+                    value: t.rule({
+                        type: Number
+                    })
+                }
+            }).build().should.be.eql({
+                    name: 'name',
+                    surname: 'surname',
+                    index: 1,
+                    data: {
+                        value: undefined
+                    }
+                });
+        });
+
         it('test clean functionality with Simple Root Object', function () {
             var simpleModel = {
                 name: 'name',
@@ -229,23 +260,23 @@ describe('test core methods of ISSchemaTools', function () {
             }).clean().build().should.have.keys(['name', 'surname', 'index']);
         });
         /*
-        it('test #clean functionality with Array as Root Object and non object types', function () {
-            var simpleModel = ['val0', {value: 2}, {}, 1, 2, null, {value: 1}, 'val1'];
+         it('test #clean functionality with Array as Root Object and non object types', function () {
+         var simpleModel = ['val0', {value: 2}, {}, 1, 2, null, {value: 1}, 'val1'];
 
-            t.clean(simpleModel, [t.rule({type: String})]).should.be.eql(['val0', 'val1']);
-            t.chain(simpleModel, [t.rule({type: String})]).clean().build()
-                .should
-                .be
-                .matchEach(['val0', null, null, null, null, null, 'val1']);
-        });
+         t.clean(simpleModel, [t.rule({type: String})]).should.be.eql(['val0', 'val1']);
+         t.chain(simpleModel, [t.rule({type: String})]).clean().build()
+         .should
+         .be
+         .matchEach(['val0', null, null, null, null, null, 'val1']);
+         });
 
-        it('test #clean functionality with Array as Root Object and object types', function () {
-            var simpleModel = ['val0', {value: 2}, {}, 1, 2, null, {value: 1}];
+         it('test #clean functionality with Array as Root Object and object types', function () {
+         var simpleModel = ['val0', {value: 2}, {}, 1, 2, null, {value: 1}];
 
-            t.clean(simpleModel, [{value: t.rule({type: Number})}]).should.be.eql([null, {value: 2}, null, null, null, null, {value: 1}]);
-            t.chain(simpleModel, [{value: t.rule({type: Number})}]).clean().build().should.be.eql([null, {value: 2}, null, null, null, null, {value: 1}]);
-        });
-        */
+         t.clean(simpleModel, [{value: t.rule({type: Number})}]).should.be.eql([null, {value: 2}, null, null, null, null, {value: 1}]);
+         t.chain(simpleModel, [{value: t.rule({type: Number})}]).clean().build().should.be.eql([null, {value: 2}, null, null, null, null, {value: 1}]);
+         });
+         */
 
         it('test #clean functionality with Object as Root and Complex data in nodes', function () {
             var complexModel = {
@@ -280,7 +311,7 @@ describe('test core methods of ISSchemaTools', function () {
                         }]
                     }
                 }
-            }).should.have.eql({
+            }).should.be.eql({
                     data: {
                         data: {
                             data: [{

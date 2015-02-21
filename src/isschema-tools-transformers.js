@@ -1,3 +1,5 @@
+var ISSchemaTools = require('./isschema-tools-core');
+
 ISSchemaTools.defineExtension('transform', function (_, addToChain) {
 
     var self = this;

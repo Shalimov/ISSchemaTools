@@ -149,7 +149,7 @@ var ISSchemaTools = (function () {
             var node = createNode(val, key, path, level, this, null);
             var isCircular = circularDepend.indexOf(val) !== -1;
 
-            if (!_.isFunction(val) && _.isObject(val) && !isCircular) {
+            if (_.isObject(val) && !isCircular) {
                 stack.push(node);
                 circularDepend.push(val);
             }
@@ -163,33 +163,47 @@ var ISSchemaTools = (function () {
         } while (stack.length !== 0);
     }
 
+    function prepareNode(val, key, pattern) {
+        var path = this.path.slice();
+        var level = path.push(key);
+        return createNode(val, key, path, level, null, pattern);
+    }
+
     function matchTraverse(obj, pattern) {
         if (!(_.isObject(obj) || _.isObject(pattern))) throw new Error('First and Second arguments should be an Object');
 
         var nodes = [];
-        var stack = [createNode(obj, null, null, 1, null, pattern)];
+        var stack = [{node: createNode(obj, null, null, 1, null, pattern), stage: pattern}];
 
-        function iterate(val, key) {
-            var path = this.path.slice();
-            var level = path.push(key);
+        function iterate(stage, key) {
+            var node, value;
             var pattern = this.pattern && this.pattern[_.isNumber(key) ? 0 : key];
-            var node = createNode(val, key, path, level, this, pattern);
 
             if (pattern === undefined) {
                 return;
             } else if (pattern instanceof Rule) {
+                value = this.value[key];
+
+                if (pattern === value) {
+                    value = undefined;
+                }
+
+                node = prepareNode.call(this, value, key, pattern);
                 nodes.push(node);
                 return;
             }
 
-            if (!_.isFunction(val) && _.isObject(val)) {
-                stack.push(node);
+            if (_.isObject(pattern)) {
+                value = this.value[key];
+                value = _.isObject(value) ? value : pattern;
+                node = prepareNode.call(this, value, key, pattern);
+                stack.push({node: node, stage: value});
             }
         }
 
         do {
-            var node = stack.pop();
-            _.each(node.value, iterate, node);
+            var vertex = stack.pop();
+            _.each(vertex.stage, iterate, vertex.node);
         } while (stack.length !== 0);
 
         return nodes;

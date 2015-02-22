@@ -1,5 +1,4 @@
-var t = require('../src/isschema-tools-core');
-require('../src/isschema-tools-transformers');
+var t = require('../src/isschema-tools');
 
 describe('test transformers module functionality', function () {
     it('test existence of functions of module', function () {

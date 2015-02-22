@@ -1,4 +1,4 @@
-var t = require('../src/isschema-tools-core');
+var t = require('../src/isschema-tools');
 
 describe('test core methods of ISSchemaTools', function () {
 
@@ -17,7 +17,7 @@ describe('test core methods of ISSchemaTools', function () {
         });
 
         it('test existence of small set of functions of underscore/lodash', function () {
-            _.should.have.keys(['_toString', '_formatArgs', '_formatObj', 'isNaN', 'isFunction', 'isObject', 'isNumber', 'isBoolean', 'isEmpty', 'isExpectedTypeOrNull', 'each', 'compact', 'extend', 'format']);
+            _.should.have.keys(['_toString', '_formatArgs', '_formatObj', 'isNaN', 'isString', 'isFunction', 'isObject', 'isNumber', 'isBoolean', 'isEmpty', 'isExpectedTypeOrNull', 'each', 'compact', 'extend', 'format']);
 
             _.should.matchEach(function (it) {
                 it.should.be.a.Function;
@@ -37,6 +37,21 @@ describe('test core methods of ISSchemaTools', function () {
             _.isNaN(undefined).should.be.false;
             _.isNaN(null).should.be.false;
             _.isNaN(NaN).should.be.true;
+        });
+
+        it('test _#isString', function () {
+            _.isString(Infinity).should.be.false;
+            _.isString(false).should.be.false;
+            _.isString(true).should.be.false;
+            _.isString(NaN).should.be.false;
+            _.isString(Function).should.be.false;
+            _.isString(undefined).should.be.false;
+            _.isString(null).should.be.false;
+            _.isString([]).should.be.false;
+            _.isString({}).should.be.false;
+            _.isString(1).should.be.false;
+            _.isString("string").should.be.true;
+            _.isString("NaN").should.be.true;
         });
 
         it('test _#isFunction', function () {

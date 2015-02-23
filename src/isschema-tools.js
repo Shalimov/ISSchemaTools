@@ -1,6 +1,6 @@
-(function () {
+(function() {
 
-    var ISSchemaTools = (function () {
+    var ISSchemaTools = (function() {
         'use strict';
 
         var root = {};
@@ -11,46 +11,46 @@
         var _ = {
             _toString: Object.prototype.toString,
 
-            _formatObj: function (str, data) {
-                return str.replace(objFormatPattern, function (gr, capture) {
+            _formatObj: function(str, data) {
+                return str.replace(objFormatPattern, function(gr, capture) {
                     return data[capture] || '';
                 });
             },
 
-            _formatArgs: function () {
+            _formatArgs: function() {
                 var str = arguments[0];
                 var args = Array.prototype.slice.call(arguments, 1);
 
-                return str.replace(argsFormatPattern, function (gr, capture) {
+                return str.replace(argsFormatPattern, function(gr, capture) {
                     return args[capture] || '';
                 });
             },
 
-            isNaN: function (val) {
+            isNaN: function(val) {
                 return val !== val;
             },
 
-            isString: function (val) {
+            isString: function(val) {
                 return this._toString.call(val) === '[object String]';
             },
 
-            isFunction: function (func) {
+            isFunction: function(func) {
                 return !!func && this._toString.call(func) === '[object Function]';
             },
 
-            isObject: function (obj) {
+            isObject: function(obj) {
                 return obj !== null && typeof obj === 'object';
             },
 
-            isNumber: function (n) {
+            isNumber: function(n) {
                 return this._toString.call(n) === '[object Number]' && !this.isNaN(n) && isFinite(n);
             },
 
-            isBoolean: function (b) {
+            isBoolean: function(b) {
                 return typeof b === 'boolean';
             },
 
-            isEmpty: function (val, globalAllow, localAllow) {
+            isEmpty: function(val, globalAllow, localAllow) {
                 var isNull = val === null;
 
                 if (isNull && _.isBoolean(localAllow)) {
@@ -62,11 +62,11 @@
                 return isNull || val === undefined || val === "" || this.isNaN(val) || val === Infinity;
             },
 
-            isExpectedTypeOrNull: function (val, type) {
+            isExpectedTypeOrNull: function(val, type) {
                 return val === null || val.constructor === type;
             },
 
-            each: function (instance, fn, ctx) {
+            each: function(instance, fn, ctx) {
                 var i, length, keys, key;
 
                 if (Array.isArray(instance)) {
@@ -83,11 +83,11 @@
                 }
             },
 
-            compact: function (array) {
+            compact: function(array) {
                 if (!Array.isArray(array)) return array;
 
                 var result = [];
-                this.each(array, function (val) {
+                this.each(array, function(val) {
                     if (!_.isEmpty(val)) {
                         result.push(val);
                     }
@@ -96,15 +96,30 @@
                 return result;
             },
 
-            extend: function (obj, extendObj) {
+            extend: function(obj, extendObj) {
                 if (!(this.isObject(obj) || this.isObject(extendObj))) return;
 
-                this.each(extendObj, function (val, key) {
+                this.each(extendObj, function(val, key) {
                     this[key] = val;
                 }, obj);
             },
 
-            format: function () {
+            groupBy: function(array, predicate) {
+                var resultSet = {};
+
+                array.forEach(function(val, key) {
+                    var property = predicate(val, key);
+                    if(resultSet.hasOwnProperty(property)) {
+                        resultSet[property].push(val);
+                    } else {
+                        resultSet[property] = [val];
+                    }
+                });
+
+                return resultSet;
+            },
+
+            format: function() {
                 var args = arguments;
                 var argsCount = args.length;
                 var str = args[0];
@@ -132,6 +147,14 @@
             _.extend(this, init);
         }
 
+        function filterIsNotNumberCallback(val) {
+            return !_.isNumber(val);
+        }
+
+        function createRuleName(path) {
+            return path.filter(filterIsNotNumberCallback).join('.');
+        }
+
         function createNode(value, key, path, level, parent, pattern) {
             return {
                 key: key,
@@ -150,17 +173,19 @@
             var stack = [createNode(obj, null, null, 1, null, null)];
 
             function iterate(val, key) {
-                var path = this.path.slice();
-                var level = path.push(key);
-                var node = createNode(val, key, path, level, this, null);
-                var isCircular = circularDepend.indexOf(val) !== -1;
-
                 if (_.isObject(val) && !isCircular) {
-                    stack.push(node);
-                    circularDepend.push(val);
+                    var path = this.path.slice();
+                    var level = path.push(key);
+                    var node = createNode(val, key, path, level, this, null);
+                    var isCircular = circularDepend.indexOf(val) !== -1;
+
+                    if (!isCircular) {
+                        stack.push(node);
+                        circularDepend.push(val);
+                    }
                 }
 
-                fn(node, isCircular);
+                fn(val, key, this, isCircular);
             }
 
             do {
@@ -172,6 +197,9 @@
         function prepareNode(val, key, pattern) {
             var path = this.path.slice();
             var level = path.push(key);
+
+            pattern.name = pattern.name || createRuleName(path);
+
             return createNode(val, key, path, level, null, pattern);
         }
 
@@ -179,7 +207,10 @@
             if (!(_.isObject(obj) || _.isObject(pattern))) throw new Error('First and Second arguments should be an Object');
 
             var nodes = [];
-            var stack = [{node: createNode(obj, null, null, 1, null, pattern), stage: pattern}];
+            var stack = [{
+                node: createNode(obj, null, null, 1, null, pattern),
+                stage: pattern
+            }];
 
             function iterate(stage, key) {
                 var node, value;
@@ -203,7 +234,10 @@
                     value = this.value[key];
                     value = _.isObject(value) ? value : pattern;
                     node = prepareNode.call(this, value, key, pattern);
-                    stack.push({node: node, stage: value});
+                    stack.push({
+                        node: node,
+                        stage: value
+                    });
                 }
             }
 
@@ -220,7 +254,7 @@
 
             var allowNull = options.allowNull || false;
 
-            this._nodes = this._nodes.filter(function (node) {
+            this._nodes = this._nodes.filter(function(node) {
                 var value = node.value;
                 var pattern = node.pattern;
                 return !_.isEmpty(value, allowNull, pattern.allowNull) && _.isExpectedTypeOrNull(value, pattern.type);
@@ -234,7 +268,7 @@
             var compactCache = [];
             var target;
 
-            this._nodes.forEach(function (node) {
+            this._nodes.forEach(function(node) {
                 var value = node.value;
                 var pathes = node.path;
                 target = root;
@@ -262,7 +296,7 @@
                 }
             });
 
-            compactCache.forEach(function (item) {
+            compactCache.forEach(function(item) {
                 var t = item.target;
                 var tk = item.targetKey;
                 t[tk] = _.compact(t[tk]);
@@ -317,17 +351,17 @@
             traverse: traverse,
             defineExtension: defineExtension,
 
-            rule: function (init) {
+            rule: function(init) {
                 return new Rule(init);
             },
 
-            chain: function (obj, pattern) {
+            chain: function(obj, pattern) {
                 chainNs._isRootArray = Array.isArray(obj);
                 chainNs._nodes = matchTraverse(obj, pattern);
                 return chainNs;
             },
 
-            clean: function (obj, pattern, options) {
+            clean: function(obj, pattern, options) {
                 return this.chain(obj, pattern).clean(options).build();
             }
         });
@@ -336,7 +370,7 @@
     })();
 
     //Transformers declaration
-    ISSchemaTools.defineExtension('transform', function (_, addToChain) {
+    ISSchemaTools.defineExtension('transform', function(_, addToChain) {
 
         var self = this;
         var module = {};
@@ -360,7 +394,7 @@
             }
 
             if (hasParams) {
-                return function (params) {
+                return function(params) {
                     return method.bind(null, params);
                 };
             }
@@ -386,39 +420,39 @@
 
         addToChain('transform', transform);
 
-        register('trim', build(function (value) {
+        register('trim', build(function(value) {
             return String.prototype.trim.call(value);
         }));
 
-        register('trimLeft', build(function (value) {
+        register('trimLeft', build(function(value) {
             return String.prototype.trimLeft.call(value);
         }));
 
-        register('trimRight', build(function (value) {
+        register('trimRight', build(function(value) {
             return String.prototype.trimRight.call(value);
         }));
 
-        register('substring', build(function (params, value) {
+        register('substring', build(function(params, value) {
             return String.prototype.substring.call(value, params[0], params[1]);
         }, true));
 
-        register('replace', build(function (params, value) {
+        register('replace', build(function(params, value) {
             return String.prototype.replace.call(value, params[0], params[1]);
         }, true));
 
-        register('toUpper', build(function (value) {
+        register('toUpper', build(function(value) {
             return String.prototype.toUpperCase.call(value);
         }));
 
-        register('toLower', build(function (value) {
+        register('toLower', build(function(value) {
             return String.prototype.toLowerCase.call(value);
         }));
 
-        register('toStringType', build(function (value) {
+        register('toStringType', build(function(value) {
             return value.toString();
         }));
 
-        register('nullIfEmpty', build(function (value) {
+        register('nullIfEmpty', build(function(value) {
             return _.isEmpty(value) ? null : value;
         }));
 
@@ -426,7 +460,7 @@
             transformers: transformers,
             register: register,
             build: build,
-            transform: function () {
+            transform: function() {
                 return self.chain(obj, pattern).transform().build();
             }
         });
@@ -435,7 +469,7 @@
     });
 
 
-    ISSchemaTools.defineExtension('validate', function (_, addToChain) {
+    ISSchemaTools.defineExtension('validate', function(_, addToChain) {
 
         var module = {};
         var validators = {};
@@ -474,26 +508,26 @@
             }
 
             if (hasParams) {
-                return function (params) {
-                    return function (val, key) {
+                return function(params) {
+                    return function(val, key) {
                         var args = [val, key].concat(params);
                         var descriptor = method.apply(null, args);
 
                         return descriptor && {
-                                descriptor: descriptor,
-                                params: params
-                            };
+                            descriptor: descriptor,
+                            params: params
+                        };
                     };
                 };
             }
 
-            return function (val, key) {
+            return function(val, key) {
                 var descriptor = method(val, key);
 
                 return descriptor && {
-                        descriptor: descriptor,
-                        params: undefined
-                    };
+                    descriptor: descriptor,
+                    params: undefined
+                };
             };
         }
 
@@ -515,69 +549,65 @@
 
         function iterateNode(node) {
             var pattern = node.pattern;
-            var validtrs = pattern.validators;
+            var validateObj = pattern.validate;
 
-            if (_.isObject(validtrs)) {
-
-                var key = node.key;
-                //var detailed = this.detailed;
-                //var value = node.value;
-                //var label = pattern.label || key;
-
-                _.each(validtrs, validatorHandler);
+            if (_.isObject(validateObj)) {
+                _.each(validateObj, validatorHandler);
             }
 
             return null;
         }
 
         function validate(options) {
-            options = options || {detailed: false};
+            options = options || {
+                detailed: false
+            };
 
             return this._nodes.map(iterateNode.bind(options));
         }
 
         addToChain('validate', validate);
 
-        register('required', build(function (val) {
+        register('required', build(function(val) {
             return _.isEmpty(val) ? 'required' : null;
         }));
 
-        register('email', build(function (val) {
+        register('email', build(function(val) {
             return (_.isEmpty(val) || regexPatterns.email.test(val)) ? null : 'email';
         }, true));
 
-        register('minLength', build(function (val, key, minLength) {
+        register('minLength', build(function(val, key, minLength) {
             return (_.isEmpty(val) || val.length > minLength) ? null : 'minLength';
         }, true));
 
-        register('maxLength', build(function (val, key, maxLength) {
+        register('maxLength', build(function(val, key, maxLength) {
             return (_.isEmpty(val) || val.length < maxLength) ? null : 'maxLength';
         }, true));
 
-        register('range', build(function (val, key, min, max) {
+        register('range', build(function(val, key, min, max) {
             return (_.isNumber(val) && min < val && val < max) ? null : 'range';
         }, true));
 
-        register('eqlLength', build(function (val, key, eqlLength) {
+        register('eqlLength', build(function(val, key, eqlLength) {
             return (_.isEmpty(val) || val.length === eqlLength) ? null : 'eqlLength';
         }, true));
 
-        register('isNumber', build(function (val) {
+        register('isNumber', build(function(val) {
             return _.isNumber(val) ? null : 'notNumber';
         }));
 
-        register('isBoolean', build(function (val) {
+        register('isBoolean', build(function(val) {
             return _.isBoolean(val) ? null : 'notBoolean';
         }));
 
-        register('isString', build(function (val) {
+        register('isString', build(function(val) {
             return _.isString(val) ? null : 'notString';
         }));
 
         _.extend(module, {
             register: register,
             build: build,
-            messages: function (extMessages) {
+            messages: function(extMessages) {
                 if (!_.isObject(extMessages)) {
                     throw new Error('First argument should be an Object');
                 }

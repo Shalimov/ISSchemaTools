@@ -1,7 +1,6 @@
-(function() {
+(function () {
 
-    var ISSchemaTools = (function() {
-        'use strict';
+    var ISSchemaTools = (function () {
 
         var root = {};
         var chainNs = {};
@@ -11,46 +10,46 @@
         var _ = {
             _toString: Object.prototype.toString,
 
-            _formatObj: function(str, data) {
-                return str.replace(objFormatPattern, function(gr, capture) {
+            _formatObj: function (str, data) {
+                return str.replace(objFormatPattern, function (gr, capture) {
                     return data[capture] || '';
                 });
             },
 
-            _formatArgs: function() {
+            _formatArgs: function () {
                 var str = arguments[0];
                 var args = Array.prototype.slice.call(arguments, 1);
 
-                return str.replace(argsFormatPattern, function(gr, capture) {
+                return str.replace(argsFormatPattern, function (gr, capture) {
                     return args[capture] || '';
                 });
             },
 
-            isNaN: function(val) {
+            isNaN: function (val) {
                 return val !== val;
             },
 
-            isString: function(val) {
+            isString: function (val) {
                 return this._toString.call(val) === '[object String]';
             },
 
-            isFunction: function(func) {
+            isFunction: function (func) {
                 return !!func && this._toString.call(func) === '[object Function]';
             },
 
-            isObject: function(obj) {
+            isObject: function (obj) {
                 return obj !== null && typeof obj === 'object';
             },
 
-            isNumber: function(n) {
+            isNumber: function (n) {
                 return this._toString.call(n) === '[object Number]' && !this.isNaN(n) && isFinite(n);
             },
 
-            isBoolean: function(b) {
+            isBoolean: function (b) {
                 return typeof b === 'boolean';
             },
 
-            isEmpty: function(val, globalAllow, localAllow) {
+            isEmpty: function (val, globalAllow, localAllow) {
                 var isNull = val === null;
 
                 if (isNull && _.isBoolean(localAllow)) {
@@ -62,11 +61,19 @@
                 return isNull || val === undefined || val === "" || this.isNaN(val) || val === Infinity;
             },
 
-            isExpectedTypeOrNull: function(val, type) {
+            isExpectedTypeOrNull: function (val, type) {
                 return val === null || val.constructor === type;
             },
 
-            each: function(instance, fn, ctx) {
+            first: function (array) {
+                return Array.isArray(array) ? array[0] : array;
+            },
+
+            identity: function (val) {
+                return val
+            },
+
+            each: function (instance, fn, ctx) {
                 var i, length, keys, key;
 
                 if (Array.isArray(instance)) {
@@ -83,11 +90,21 @@
                 }
             },
 
-            compact: function(array) {
+            map: function (instance, fn, ctx) {
+                var result = [];
+
+                this.each(instance, function () {
+                    result.push(fn.apply(this, arguments));
+                }, ctx);
+
+                return result;
+            },
+
+            compact: function (array) {
                 if (!Array.isArray(array)) return array;
 
                 var result = [];
-                this.each(array, function(val) {
+                this.each(array, function (val) {
                     if (!_.isEmpty(val)) {
                         result.push(val);
                     }
@@ -96,20 +113,25 @@
                 return result;
             },
 
-            extend: function(obj, extendObj) {
+            extend: function (obj, extendObj) {
                 if (!(this.isObject(obj) || this.isObject(extendObj))) return;
 
-                this.each(extendObj, function(val, key) {
+                this.each(extendObj, function (val, key) {
                     this[key] = val;
                 }, obj);
             },
 
-            groupBy: function(array, predicate) {
+            groupBy: function (array, groupPredicate, identityPredicate) {
                 var resultSet = {};
 
-                array.forEach(function(val, key) {
-                    var property = predicate(val, key);
-                    if(resultSet.hasOwnProperty(property)) {
+                identityPredicate = identityPredicate || this.identity;
+
+                array.forEach(function (val, key) {
+
+                    var property = groupPredicate(val, key);
+                    val = identityPredicate(val);
+
+                    if (resultSet.hasOwnProperty(property)) {
                         resultSet[property].push(val);
                     } else {
                         resultSet[property] = [val];
@@ -119,7 +141,7 @@
                 return resultSet;
             },
 
-            format: function() {
+            format: function () {
                 var args = arguments;
                 var argsCount = args.length;
                 var str = args[0];
@@ -143,7 +165,13 @@
         };
 
         function Rule(init) {
-            if (!(_.isObject(init) && _.isFunction(init.type))) throw new Error('First argument must be an Object. Type must be defined.');
+
+            if (_.isFunction(init)) {
+                init = {type: init};
+            } else if (!(_.isObject(init) && _.isFunction(init.type))) {
+                throw new Error('First argument must be an Object or Constructor. Type must be defined.');
+            }
+
             _.extend(this, init);
         }
 
@@ -167,7 +195,9 @@
         }
 
         function traverse(obj, fn) {
-            if (!(_.isObject(obj) || _.isFunction(fn))) throw new Error('First should be an Object, second should be a Function');
+            if (!(_.isObject(obj) || _.isFunction(fn))) {
+                throw new Error('First should be an Object, second should be a Function');
+            }
 
             var circularDepend = [];
             var stack = [createNode(obj, null, null, 1, null, null)];
@@ -254,7 +284,7 @@
 
             var allowNull = options.allowNull || false;
 
-            this._nodes = this._nodes.filter(function(node) {
+            this._nodes = this._nodes.filter(function (node) {
                 var value = node.value;
                 var pattern = node.pattern;
                 return !_.isEmpty(value, allowNull, pattern.allowNull) && _.isExpectedTypeOrNull(value, pattern.type);
@@ -268,7 +298,7 @@
             var compactCache = [];
             var target;
 
-            this._nodes.forEach(function(node) {
+            this._nodes.forEach(function (node) {
                 var value = node.value;
                 var pathes = node.path;
                 target = root;
@@ -296,7 +326,7 @@
                 }
             });
 
-            compactCache.forEach(function(item) {
+            compactCache.forEach(function (item) {
                 var t = item.target;
                 var tk = item.targetKey;
                 t[tk] = _.compact(t[tk]);
@@ -351,17 +381,17 @@
             traverse: traverse,
             defineExtension: defineExtension,
 
-            rule: function(init) {
+            rule: function (init) {
                 return new Rule(init);
             },
 
-            chain: function(obj, pattern) {
+            chain: function (obj, pattern) {
                 chainNs._isRootArray = Array.isArray(obj);
                 chainNs._nodes = matchTraverse(obj, pattern);
                 return chainNs;
             },
 
-            clean: function(obj, pattern, options) {
+            clean: function (obj, pattern, options) {
                 return this.chain(obj, pattern).clean(options).build();
             }
         });
@@ -370,7 +400,7 @@
     })();
 
     //Transformers declaration
-    ISSchemaTools.defineExtension('transform', function(_, addToChain) {
+    ISSchemaTools.defineExtension('transform', function (_, addToChain) {
 
         var self = this;
         var module = {};
@@ -394,7 +424,7 @@
             }
 
             if (hasParams) {
-                return function(params) {
+                return function (params) {
                     return method.bind(null, params);
                 };
             }
@@ -420,39 +450,39 @@
 
         addToChain('transform', transform);
 
-        register('trim', build(function(value) {
+        register('trim', build(function (value) {
             return String.prototype.trim.call(value);
         }));
 
-        register('trimLeft', build(function(value) {
+        register('trimLeft', build(function (value) {
             return String.prototype.trimLeft.call(value);
         }));
 
-        register('trimRight', build(function(value) {
+        register('trimRight', build(function (value) {
             return String.prototype.trimRight.call(value);
         }));
 
-        register('substring', build(function(params, value) {
+        register('substring', build(function (params, value) {
             return String.prototype.substring.call(value, params[0], params[1]);
         }, true));
 
-        register('replace', build(function(params, value) {
+        register('replace', build(function (params, value) {
             return String.prototype.replace.call(value, params[0], params[1]);
         }, true));
 
-        register('toUpper', build(function(value) {
+        register('toUpper', build(function (value) {
             return String.prototype.toUpperCase.call(value);
         }));
 
-        register('toLower', build(function(value) {
+        register('toLower', build(function (value) {
             return String.prototype.toLowerCase.call(value);
         }));
 
-        register('toStringType', build(function(value) {
+        register('toStringType', build(function (value) {
             return value.toString();
         }));
 
-        register('nullIfEmpty', build(function(value) {
+        register('nullIfEmpty', build(function (value) {
             return _.isEmpty(value) ? null : value;
         }));
 
@@ -460,7 +490,7 @@
             transformers: transformers,
             register: register,
             build: build,
-            transform: function() {
+            transform: function () {
                 return self.chain(obj, pattern).transform().build();
             }
         });
@@ -469,7 +499,7 @@
     });
 
 
-    ISSchemaTools.defineExtension('validate', function(_, addToChain) {
+    ISSchemaTools.defineExtension('validate', function (_, addToChain) {
 
         var module = {};
         var validators = {};
@@ -484,10 +514,8 @@
             'maxLength': '${0} must have length at most ${2}',
             'eqlLength': '${0} must have length eql ${2}',
             'range': '${0} must be between ${2} and ${3}',
-            'notNumber': '${0} must be a Number',
-            'notBoolean': '${0} must be a Boolean',
-            'notString': '${0} must be a String',
-            'email': '${0} must have correct'
+            'email': '${0} must be correct',
+            'type': '${0} must have appropriate type'
         };
 
         function register(validatorName, method) {
@@ -502,117 +530,137 @@
             validators[validatorName] = method;
         }
 
-        function build(method, hasParams) {
-            if (!_.isFunction(method)) {
-                throw new Error('Argument is not a Function');
-            }
-
-            if (hasParams) {
-                return function(params) {
-                    return function(val, key) {
-                        var args = [val, key].concat(params);
-                        var descriptor = method.apply(null, args);
-
-                        return descriptor && {
-                            descriptor: descriptor,
-                            params: params
-                        };
-                    };
-                };
-            }
-
-            return function(val, key) {
-                var descriptor = method(val, key);
-
-                return descriptor && {
-                    descriptor: descriptor,
-                    params: undefined
-                };
-            };
-        }
-
-        function validatorHandler(params, validatorName) {
-            var validator = _.isFunction(params) ? params : validators[validatorName];
-
-            if (!_.isFunction(validator)) {
-                throw new Error('Validator ${0} must be a Function and be defined');
-            }
-
-            if (_.isEmpty(params) || _.isBoolean(params) && !params) {
-                return;
-            }
-
-            if (_.isObject(params) && params.dependsOn) {
-
-            }
-        }
-
-        function iterateNode(node) {
-            var pattern = node.pattern;
-            var validateObj = pattern.validate;
-
-            if (_.isObject(validateObj)) {
-                _.each(validateObj, validatorHandler);
-            }
-
-            return null;
-        }
-
         function validate(options) {
-            options = options || {
-                detailed: false
+            var errors = [];
+            var nodes = this._nodes;
+            var configuration = {
+                detailed: options && options.detailed,
+                configuration: null
             };
 
-            return this._nodes.map(iterateNode.bind(options));
+            configuration.values = _.groupBy(nodes, function (node) {
+                return node.pattern.name;
+            }, function (node) {
+                return node.value;
+            });
+
+            _.each(nodes, function iterateNode(node) {
+                var pattern = node.pattern;
+                var validateObj = pattern.validate;
+
+                if (!_.isObject(validateObj)) {
+                    return;
+                }
+
+                var label = pattern.label || pattern.name;
+                var keys = Object.keys(validateObj);
+                var validatorName, validator, params, validatorResult, passingParams;
+
+                for (var i = 0, length = keys.length; i < length; i += 1) {
+                    validatorName = keys[i];
+                    params = validateObj[validatorName];
+                    validator = validators[validatorName];
+
+                    if (!_.isFunction(validator)) {
+                        throw new Error('Validator ${0} must be defined');
+                    }
+
+                    if (_.isEmpty(params) || _.isBoolean(params) && !params) {
+                        continue;
+                    }
+
+                    passingParams = [node.value];
+
+                    if (_.isObject(params)) {
+                        if (params.dependsOn) {
+                            passingParams.push(configuration.values[params.dependsOn]);
+                        }
+
+                        if (params.args) {
+                            passingParams.push(params.args);
+                        }
+
+                        validatorResult = params.message;
+                    }
+
+                    passingParams.push(params, pattern);
+
+                    if (validator.apply(null, passingParams) === true) {
+                        continue;
+                    }
+
+                    if (!validatorResult) {
+                        validatorResult = messages[validatorName] || messages['invalid'];
+                    }
+
+                    validatorResult = _.format(validatorResult, [label].concat(passingParams));
+
+                    errors.push(configuration.detailed ? {
+                        ruleName: pattern.name,
+                        key: node.key,
+                        value: node.value,
+                        error: validatorResult
+                    } : validatorResult);
+
+                    break;
+                }
+            });
+
+            return errors.length ? errors : null;
         }
 
         addToChain('validate', validate);
 
-        register('required', build(function(val) {
-            return _.isEmpty(val) ? 'required' : null;
-        }));
+        register('required', function (val) {
+            return !_.isEmpty(val);
+        });
 
-        register('email', build(function(val) {
-            return (_.isEmpty(val) || regexPatterns.email.test(val)) ? null : 'email';
-        }, true));
+        register('type', function (val, arg, pattern) {
+            return (!_.isEmpty(val) || val === '') && _.isExpectedTypeOrNull(val, pattern.type);
+        });
 
-        register('minLength', build(function(val, key, minLength) {
-            return (_.isEmpty(val) || val.length > minLength) ? null : 'minLength';
-        }, true));
+        register('email', function (val) {
+            return _.isEmpty(val) || regexPatterns.email.test(val);
+        });
 
-        register('maxLength', build(function(val, key, maxLength) {
-            return (_.isEmpty(val) || val.length < maxLength) ? null : 'maxLength';
-        }, true));
+        register('minLength', function (val, minLength) {
+            return _.isEmpty(val) || val.length >= minLength;
+        });
 
-        register('range', build(function(val, key, min, max) {
-            return (_.isNumber(val) && min < val && val < max) ? null : 'range';
-        }, true));
+        register('maxLength', function (val, maxLength) {
+            return _.isEmpty(val) || val.length <= maxLength;
+        });
 
-        register('eqlLength', build(function(val, key, eqlLength) {
-            return (_.isEmpty(val) || val.length === eqlLength) ? null : 'eqlLength';
-        }, true));
+        register('eqlLength', function (val, eqlLength) {
+            return _.isEmpty(val) || val.length === eqlLength;
+        });
 
-        register('isNumber', build(function(val) {
-            return _.isNumber(val) ? null : 'notNumber';
-        }));
+        register('range', function (val, params) {
+            var min = params[0];
+            var max = params[1];
 
-        register('isBoolean', build(function(val) {
-            return _.isBoolean(val) ? null : 'notBoolean';
-        }));
+            return _.isEmpty(val) || _.isNumber(val) && min < val && val < max;
+        });
 
-        register('isString', build(function(val) {
-            return _.isString(val) ? null : 'notString';
-        }));
+        register('equalTo', function (val, dependsValue) {
+            return val === _.first(dependsValue);
+        });
+
+        register('belongsTo', function (val, values) {
+            return values.indexOf(val) !== -1;
+        });
 
         _.extend(module, {
             register: register,
-            build: build,
-            messages: function(extMessages) {
+            messages: function (extMessages) {
                 if (!_.isObject(extMessages)) {
                     throw new Error('First argument should be an Object');
                 }
 
                 _.extend(messages, extMessages);
+            },
+            validate: function (obj, pattern, options) {
+                return this.chain(obj, pattern).validate(options);
             }
         });
 

@@ -1,5 +1,7 @@
 var t = require('../src/isschema-tools');
 
+//TODO: Added tests for groupBy, map, identity, first
+
 describe('test core methods of ISSchemaTools', function () {
 
     describe('test small set of underscore/lodash functions', function () {
@@ -17,7 +19,7 @@ describe('test core methods of ISSchemaTools', function () {
         });
 
         it('test existence of small set of functions of underscore/lodash', function () {
-            _.should.have.keys(['_toString', '_formatArgs', '_formatObj', 'isNaN', 'isString', 'isFunction', 'isObject', 'isNumber', 'isBoolean', 'isEmpty', 'isExpectedTypeOrNull', 'each', 'compact', 'extend', 'format']);
+            _.should.have.keys(['_toString', '_formatArgs', '_formatObj', 'first', 'groupBy', 'map', 'identity', 'isNaN', 'isString', 'isFunction', 'isObject', 'isNumber', 'isBoolean', 'isEmpty', 'isExpectedTypeOrNull', 'each', 'compact', 'extend', 'format']);
 
             _.should.matchEach(function (it) {
                 it.should.be.a.Function;

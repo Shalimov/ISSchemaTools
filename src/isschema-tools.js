@@ -167,7 +167,9 @@
         function Rule(init) {
 
             if (_.isFunction(init)) {
-                init = {type: init};
+                init = {
+                    type: init
+                };
             } else if (!(_.isObject(init) && _.isFunction(init.type))) {
                 throw new Error('First argument must be an Object or Constructor. Type must be defined.');
             }
@@ -203,7 +205,7 @@
             var stack = [createNode(obj, null, null, 1, null, null)];
 
             function iterate(val, key) {
-                if (_.isObject(val) && !isCircular) {
+                if (_.isObject(val)) {
                     var path = this.path.slice();
                     var level = path.push(key);
                     var node = createNode(val, key, path, level, this, null);

@@ -1,7 +1,6 @@
 (function () {
 
     var ISSchemaTools = (function () {
-
         var root = {};
         var chainNs = {};
         var objFormatPattern = /\$\{(\w+)\}/g;
@@ -119,6 +118,8 @@
                 this.each(extendObj, function (val, key) {
                     this[key] = val;
                 }, obj);
+
+                return this;
             },
 
             groupBy: function (array, groupPredicate, identityPredicate) {
@@ -281,26 +282,28 @@
             return nodes;
         }
 
-        function clean(options) {
-            options = options || {};
-
-            var allowNull = options.allowNull || false;
-
-            this._nodes = this._nodes.filter(function (node) {
-                var value = node.value;
-                var pattern = node.pattern;
-                return !_.isEmpty(value, allowNull, pattern.allowNull) && _.isExpectedTypeOrNull(value, pattern.type);
-            });
-
-            return this;
-        }
-
-        function build() {
+        function build(options) {
             var root = this._isRootArray ? [] : {};
             var compactCache = [];
-            var target;
+            var nodes = this._nodes;
+            var target, allowNull;
 
-            this._nodes.forEach(function (node) {
+            options = _.extend({
+                clean: false,
+                allowNull: false
+            }, options);
+
+            if (options.clean) {
+                allowNull = options.allowNull;
+
+                nodes = nodes.filter(function (node) {
+                    var value = node.value;
+                    var pattern = node.pattern;
+                    return !_.isEmpty(value, allowNull, pattern.allowNull) && _.isExpectedTypeOrNull(value, pattern.type);
+                });
+            }
+
+            nodes.forEach(function (node) {
                 var value = node.value;
                 var pathes = node.path;
                 target = root;
@@ -374,7 +377,6 @@
         _.extend(chainNs, {
             _isRootArray: null,
             _nodes: null,
-            clean: (clean).bind(chainNs),
             build: (build).bind(chainNs)
         });
 
@@ -391,10 +393,6 @@
                 chainNs._isRootArray = Array.isArray(obj);
                 chainNs._nodes = matchTraverse(obj, pattern);
                 return chainNs;
-            },
-
-            clean: function (obj, pattern, options) {
-                return this.chain(obj, pattern).clean(options).build();
             }
         });
 
@@ -500,13 +498,12 @@
         return module;
     });
 
-
-    ISSchemaTools.defineExtension('validate', function (_, addToChain) {
-
+    ISSchemaTools.defineExtension('validation', function (_, addToChain) {
         var module = {};
         var validators = {};
         var regexPatterns = {
-            email: /^([\w\-\.]+)@((\[[\d]{1,3}\.[\d]{1,3}\.[\d]{1,3}\.)|(([\w\-]+\.)+))([a-zA-Z]{2,4}|\d{1,3})(\]?)$/g
+            email: /^([\w\-\.]+)@((\[[\d]{1,3}\.[\d]{1,3}\.[\d]{1,3}\.)|(([\w\-]+\.)+))([a-zA-Z]{2,4}|\d{1,3})(\]?)$/g,
+            digits: /^\d+$/
         };
 
         var messages = {
@@ -517,7 +514,8 @@
             'eqlLength': '${0} must have length eql ${2}',
             'range': '${0} must be between ${2} and ${3}',
             'email': '${0} must be correct',
-            'type': '${0} must have appropriate type'
+            'type': '${0} must have appropriate type',
+            'digits': '${0} must contain only digits'
         };
 
         function register(validatorName, method) {
@@ -535,12 +533,9 @@
         function validate(options) {
             var errors = [];
             var nodes = this._nodes;
-            var configuration = {
-                detailed: options && options.detailed,
-                configuration: null
-            };
+            var detailed = !!options && options.detailed;
 
-            configuration.values = _.groupBy(nodes, function (node) {
+            var ruleValues = _.groupBy(nodes, function (node) {
                 return node.pattern.name;
             }, function (node) {
                 return node.value;
@@ -548,46 +543,34 @@
 
             _.each(nodes, function iterateNode(node) {
                 var pattern = node.pattern;
-                var validateObj = pattern.validate;
+                var validateObj = pattern.validation;
 
                 if (!_.isObject(validateObj)) {
                     return;
                 }
 
+                var value = node.value;
                 var label = pattern.label || pattern.name;
                 var keys = Object.keys(validateObj);
-                var validatorName, validator, params, validatorResult, passingParams;
+                var validatorName, validator, params, validatorResult, args;
 
                 for (var i = 0, length = keys.length; i < length; i += 1) {
                     validatorName = keys[i];
-                    params = validateObj[validatorName];
                     validator = validators[validatorName];
+                    args = params = validateObj[validatorName];
 
                     if (!_.isFunction(validator)) {
                         throw new Error('Validator ${0} must be defined');
-                    }
-
-                    if (_.isEmpty(params) || _.isBoolean(params) && !params) {
+                    } else if (_.isEmpty(params) || _.isBoolean(params) && !params) {
                         continue;
                     }
 
-                    passingParams = [node.value];
-
-                    if (_.isObject(params)) {
-                        if (params.dependsOn) {
-                            passingParams.push(configuration.values[params.dependsOn]);
-                        }
-
-                        if (params.args) {
-                            passingParams.push(params.args);
-                        }
-
+                    if (!Array.isArray(params) && _.isObject(params)) {
+                        args = params.args;
                         validatorResult = params.message;
                     }
 
-                    passingParams.push(params, pattern);
-
-                    if (validator.apply(null, passingParams) === true) {
+                    if (validator(value, args, ruleValues, pattern) === true) {
                         continue;
                     }
 
@@ -595,12 +578,12 @@
                         validatorResult = messages[validatorName] || messages['invalid'];
                     }
 
-                    validatorResult = _.format(validatorResult, [label].concat(passingParams));
+                    validatorResult = _.format(validatorResult, label, value, args);
 
-                    errors.push(configuration.detailed ? {
+                    errors.push(detailed ? {
                         ruleName: pattern.name,
                         key: node.key,
-                        value: node.value,
+                        value: value,
                         error: validatorResult
                     } : validatorResult);
 
@@ -617,12 +600,16 @@
             return !_.isEmpty(val);
         });
 
-        register('type', function (val, arg, pattern) {
+        register('type', function (val, arg, ruleValues, pattern) {
             return (!_.isEmpty(val) || val === '') && _.isExpectedTypeOrNull(val, pattern.type);
         });
 
         register('email', function (val) {
             return _.isEmpty(val) || regexPatterns.email.test(val);
+        });
+
+        register('digits', function (val) {
+            return _.isEmpty(val) || regexPatterns.digits.test(val);
         });
 
         register('minLength', function (val, minLength) {
@@ -637,15 +624,15 @@
             return _.isEmpty(val) || val.length === eqlLength;
         });
 
-        register('range', function (val, params) {
-            var min = params[0];
-            var max = params[1];
+        register('range', function (val, minMax) {
+            var min = minMax[0];
+            var max = minMax[1];
 
             return _.isEmpty(val) || _.isNumber(val) && min < val && val < max;
         });
 
-        register('equalTo', function (val, dependsValue) {
-            return val === _.first(dependsValue);
+        register('equalTo', function (val, ruleName, ruleValues) {
+            return val === _.first(ruleValues[ruleName]);
         });
 
         register('belongsTo', function (val, values) {

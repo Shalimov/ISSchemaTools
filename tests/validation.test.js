@@ -3,10 +3,10 @@ var t = require('../src/isschema-tools');
 //I
 describe('test validation module functionality', function () {
     it('test existence of functions of module', function () {
-        t.validate.should.have.keys(['validate', 'register', 'messages']);
-        t.validate.validate.should.be.a.Function;
-        t.validate.register.should.be.a.Function;
-        t.validate.messages.should.be.a.Function;
+        t.validation.should.have.keys(['validate', 'register', 'messages']);
+        t.validation.validate.should.be.a.Function;
+        t.validation.register.should.be.a.Function;
+        t.validation.messages.should.be.a.Function;
     });
 
     it('test existence of functions of chain', function () {
@@ -19,7 +19,7 @@ describe('test validation module functionality', function () {
         var pattern = {
             name: t.rule({
                 type: String,
-                validate: {
+                validation: {
                     required: true
                 }
             })
@@ -45,7 +45,7 @@ describe('test validation module functionality', function () {
         var pattern = {
             name: t.rule({
                 type: String,
-                validate: {
+                validation: {
                     type: true
                 }
             })
@@ -74,7 +74,7 @@ describe('test validation module functionality', function () {
         var pattern = {
             email: t.rule({
                 type: String,
-                validate: {
+                validation: {
                     email: true
                 }
             })
@@ -105,7 +105,7 @@ describe('test validation module functionality', function () {
         var pattern = {
             email: t.rule({
                 type: String,
-                validate: {
+                validation: {
                     minLength: 5
                 }
             })
@@ -132,7 +132,7 @@ describe('test validation module functionality', function () {
         var pattern = {
             email: t.rule({
                 type: String,
-                validate: {
+                validation: {
                     maxLength: 5
                 }
             })
@@ -159,7 +159,7 @@ describe('test validation module functionality', function () {
         var pattern = {
             email: t.rule({
                 type: String,
-                validate: {
+                validation: {
                     eqlLength: 5
                 }
             })
@@ -186,7 +186,7 @@ describe('test validation module functionality', function () {
         var pattern = {
             email: t.rule({
                 type: String,
-                validate: {
+                validation: {
                     range: [2, 5]
                 }
             })
@@ -219,11 +219,8 @@ describe('test validation module functionality', function () {
             }),
             confirm: t.rule({
                 type: String,
-                validate: {
-                    equalTo: {
-                        dependsOn: 'email',
-                        message: 'Paff'
-                    }
+                validation: {
+                    equalTo: 'email'
                 }
             })
         };
@@ -245,8 +242,7 @@ describe('test validation module functionality', function () {
         var pattern = {
             sex: t.rule({
                 type: String,
-                label: 'Пол',
-                validate: {
+                validation: {
                     belongsTo: ['man', 'woman']
                 }
             })

@@ -274,7 +274,7 @@ describe('test core methods of ISSchemaTools', function () {
                 index: t.rule({
                     type: Number
                 })
-            }).clean().build().should.have.keys(['name', 'surname', 'index']);
+            }).build({clean: true}).should.have.keys(['name', 'surname', 'index']);
         });
         /*
          it('test #clean functionality with Array as Root Object and non object types', function () {
@@ -318,7 +318,7 @@ describe('test core methods of ISSchemaTools', function () {
                 }
             };
 
-            t.clean(complexModel, {
+            t.chain(complexModel, {
                 data: {
                     data: {
                         data: [{
@@ -328,7 +328,7 @@ describe('test core methods of ISSchemaTools', function () {
                         }]
                     }
                 }
-            }).should.be.eql({
+            }).build({clean: true}).should.be.eql({
                     data: {
                         data: {
                             data: [{

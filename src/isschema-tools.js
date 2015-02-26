@@ -482,6 +482,10 @@
             return value.toString();
         }));
 
+        register('default', build(function (params, value) {
+            return _.isEmpty(value) ? _.first(params) : value;
+        }, true));
+
         register('nullIfEmpty', build(function (value) {
             return _.isEmpty(value) ? null : value;
         }));

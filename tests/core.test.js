@@ -1,6 +1,7 @@
 var t = require('../src/isschema-tools');
 
 //TODO: Added tests for groupBy, map, identity, first
+//Added accurate tests
 
 describe('test core methods of ISSchemaTools', function () {
 

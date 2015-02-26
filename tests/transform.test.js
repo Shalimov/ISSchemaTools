@@ -1,5 +1,7 @@
 var t = require('../src/isschema-tools');
 
+
+//add test for transformer -> default
 describe('test transformers module functionality', function () {
     it('test existence of functions of module', function () {
         t.transform.should.have.keys(['transform', 'register', 'build', 'transformers']);

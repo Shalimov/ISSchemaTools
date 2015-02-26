@@ -1,5 +1,4 @@
 (function () {
-
     var ISSchemaTools = (function () {
         var root = {};
         var chainNs = {};
@@ -401,10 +400,25 @@
 
     //Transformers declaration
     ISSchemaTools.defineExtension('transform', function (_, addToChain) {
-
         var self = this;
         var module = {};
         var transformers = {};
+
+        function iterateNode(node) {
+            var transformers = node.pattern.transformers;
+
+            if (Array.isArray(transformers)) {
+                for (var i = 0, length = transformers.length; i < length; i += 1) {
+                    var transformer = transformers[i];
+                    node.value = transformer(node.value, node.key);
+                }
+            }
+        }
+
+        function transform() {
+            this._nodes.forEach(iterateNode);
+            return this;
+        }
 
         function register(transformerName, method) {
             if (transformers.hasOwnProperty(transformerName)) {
@@ -430,22 +444,6 @@
             }
 
             return method;
-        }
-
-        function iterateNode(node) {
-            var transformers = node.pattern.transformers;
-
-            if (Array.isArray(transformers)) {
-                for (var i = 0, length = transformers.length; i < length; i += 1) {
-                    var transformer = transformers[i];
-                    node.value = transformer(node.value, node.key);
-                }
-            }
-        }
-
-        function transform() {
-            this._nodes.forEach(iterateNode);
-            return this;
         }
 
         addToChain('transform', transform);

@@ -5,9 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d9075fc8-c7c8-4220-bd30-775ce5d0fae8" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tests/core.test.js" afterPath="$PROJECT_DIR$/tests/core.test.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/isschema-tools.js" afterPath="$PROJECT_DIR$/src/isschema-tools.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tests/transform.test.js" afterPath="$PROJECT_DIR$/tests/transform.test.js" />
     </list>
     <ignored path="ISSchemaTools.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -30,48 +28,7 @@
     <favorites_list name="ISSchemaTools" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="validation.test.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tests/validation.test.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="51" max-vertical-offset="4824">
-              <caret line="14" column="22" selection-start-line="14" selection-start-column="14" selection-end-line="14" selection-end-column="22" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="isschema-tools.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/isschema-tools.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.4375" vertical-offset="8406" max-vertical-offset="12240">
-              <caret line="481" column="36" selection-start-line="481" selection-start-column="36" selection-end-line="481" selection-end-column="36" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="transform.test.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tests/transform.test.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2646">
-              <caret line="3" column="27" selection-start-line="3" selection-start-column="27" selection-end-line="3" selection-end-column="27" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="core.test.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tests/core.test.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6408">
-              <caret line="3" column="22" selection-start-line="3" selection-start-column="22" selection-end-line="3" selection-end-column="22" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -82,10 +39,10 @@
         <option value="$PROJECT_DIR$/src/isschema-tools-transformers.js" />
         <option value="$PROJECT_DIR$/src/isschema-tools-validators.js" />
         <option value="$PROJECT_DIR$/src/isschema-tools-core.js" />
-        <option value="$PROJECT_DIR$/tests/validation.test.js" />
-        <option value="$PROJECT_DIR$/src/isschema-tools.js" />
         <option value="$PROJECT_DIR$/tests/transform.test.js" />
         <option value="$PROJECT_DIR$/tests/core.test.js" />
+        <option value="$PROJECT_DIR$/src/isschema-tools.js" />
+        <option value="$PROJECT_DIR$/tests/validation.test.js" />
       </list>
     </option>
   </component>
@@ -267,15 +224,15 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1914" height="1045" extended-state="4" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.12057113" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.12057113" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32038835" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32038835" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -438,34 +395,42 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/isschema-tools.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="12204">
+          <caret line="0" column="14" selection-start-line="0" selection-start-column="14" selection-end-line="0" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/isschema-tools-transformers.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.7761194" vertical-offset="1251" max-vertical-offset="1854">
+          <caret line="10" column="42" selection-start-line="10" selection-start-column="42" selection-end-line="10" selection-end-column="42" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/tests/validation.test.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="51" max-vertical-offset="4824">
-          <caret line="14" column="22" selection-start-line="14" selection-start-column="14" selection-end-line="14" selection-end-column="22" />
+        <state vertical-scroll-proportion="0.6865672" vertical-offset="1350" max-vertical-offset="4824">
+          <caret line="98" column="0" selection-start-line="98" selection-start-column="0" selection-end-line="98" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/tests/transform.test.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2646">
-          <caret line="3" column="27" selection-start-line="3" selection-start-column="27" selection-end-line="3" selection-end-column="27" />
+        <state vertical-scroll-proportion="-2.1940298" vertical-offset="2043" max-vertical-offset="2646">
+          <caret line="40" column="57" selection-start-line="40" selection-start-column="57" selection-end-line="40" selection-end-column="57" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/tests/core.test.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6408">
+        <state vertical-scroll-proportion="-9.769491" vertical-offset="5818" max-vertical-offset="6408">
           <caret line="3" column="22" selection-start-line="3" selection-start-column="22" selection-end-line="3" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/isschema-tools.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4375" vertical-offset="8406" max-vertical-offset="12240">
-          <caret line="481" column="36" selection-start-line="481" selection-start-column="36" selection-end-line="481" selection-end-column="36" />
           <folding />
         </state>
       </provider>

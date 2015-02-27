@@ -2,6 +2,8 @@ var t = require('../src/isschema-tools');
 
 
 //add test for transformer -> default
+//add test for toType transformer,
+//add test to toString transformer
 describe('test transformers module functionality', function () {
     it('test existence of functions of module', function () {
         t.transform.should.have.keys(['transform', 'register', 'build', 'transformers']);
@@ -26,14 +28,14 @@ describe('test transformers module functionality', function () {
         t.chain(model, {
             name: t.rule({
                 type: String,
-                transformers: [tr.trim]
+                transform: [tr.trim]
             })
         }).transform().build().should.be.eql({name: 'good skills'});
 
         t.chain(model, {
             name: t.rule({
                 type: String,
-                transformers: [tr.trimLeft, tr.trimRight]
+                transform: [tr.trimLeft, tr.trimRight]
             })
         }).transform().build().should.be.eql({name: 'good skills'});
     });
@@ -47,14 +49,14 @@ describe('test transformers module functionality', function () {
         t.chain(model, {
             name: t.rule({
                 type: String,
-                transformers: [tr.substring([0, 4])]
+                transform: [tr.substring([0, 4])]
             })
         }).transform().build().should.be.eql({name: 'good'});
 
         t.chain(model, {
             name: t.rule({
                 type: String,
-                transformers: [tr.substring([5])]
+                transform: [tr.substring([5])]
             })
         }).transform().build().should.be.eql({name: 'skills'});
     });
@@ -68,7 +70,7 @@ describe('test transformers module functionality', function () {
         t.chain(model, {
             name: t.rule({
                 type: String,
-                transformers: [tr.replace([/\s/g, '-']), tr.substring([3, 6])]
+                transform: [tr.replace([/\s/g, '-']), tr.substring([3, 6])]
             })
         }).transform().build().should.be.eql({name: 'd-s'});
     });
@@ -81,7 +83,7 @@ describe('test transformers module functionality', function () {
         }, {
             name: t.rule({
                 type: String,
-                transformers: [tr.toUpper]
+                transform: [tr.toUpper]
             })
         }).transform().build().should.be.eql({name: 'GOOD SKILLS'});
 
@@ -90,7 +92,7 @@ describe('test transformers module functionality', function () {
         }, {
             name: t.rule({
                 type: String,
-                transformers: [tr.toLower]
+                transform: [tr.toLower]
             })
         }).transform().build().should.be.eql({name: 'good skills'});
     });
@@ -104,7 +106,7 @@ describe('test transformers module functionality', function () {
         }, {
             name: t.rule({
                 type: Number,
-                transformers: [tr.toStringType]
+                transform: [tr.toStringType]
             })
         }).transform().build().should.be.eql({name: "1"});
 
@@ -113,7 +115,7 @@ describe('test transformers module functionality', function () {
         }, {
             name: t.rule({
                 type: Array,
-                transformers: [tr.toStringType]
+                transform: [tr.toStringType]
             })
         }).transform().build().should.be.eql({name: '1,2,3,4,5'});
     });
@@ -131,11 +133,11 @@ describe('test transformers module functionality', function () {
             }),
             surname: t.rule({
                 type: String,
-                transformers: [tr.nullIfEmpty]
+                transform: [tr.nullIfEmpty]
             }),
             age: t.rule({
                 type: Number,
-                transformers: [tr.nullIfEmpty]
+                transform: [tr.nullIfEmpty]
             })
         }).transform().build().should.be.eql({name: 'String', surname: null, age: null});
     });

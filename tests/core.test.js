@@ -2,6 +2,8 @@ var t = require('../src/isschema-tools');
 
 //TODO: Added tests for groupBy, map, identity, first
 //Added accurate tests
+//Added test for Omit params
+//Added test for rule params
 
 describe('test core methods of ISSchemaTools', function () {
 
@@ -227,27 +229,21 @@ describe('test core methods of ISSchemaTools', function () {
     describe('test #clean functionality', function () {
 
         it('test #matchTraverse functionality', function () {
-            var nodes = t.chain({
+            var pattern = {
+                name: t.rule(String),
+                surname: t.rule(String),
+                index: t.rule(Number),
+                data: {
+                    value: t.rule(Number)
+                }
+            };
+
+            t.chain({
                 name: 'name',
                 surname: 'surname',
                 index: 1,
                 hidden: false
-            }, {
-                name: t.rule({
-                    type: String
-                }),
-                surname: t.rule({
-                    type: String
-                }),
-                index: t.rule({
-                    type: Number
-                }),
-                data: {
-                    value: t.rule({
-                        type: Number
-                    })
-                }
-            }).build().should.be.eql({
+            }, pattern).build().should.be.eql({
                     name: 'name',
                     surname: 'surname',
                     index: 1,
@@ -324,7 +320,7 @@ describe('test core methods of ISSchemaTools', function () {
                     data: {
                         data: [{
                             value: [{
-                                data: t.rule({type: Number})
+                                data: t.rule(Number)
                             }]
                         }]
                     }

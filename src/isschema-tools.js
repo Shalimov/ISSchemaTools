@@ -118,7 +118,7 @@
                     this[key] = val;
                 }, obj);
 
-                return this;
+                return obj;
             },
 
             groupBy: function (array, groupPredicate, identityPredicate) {
@@ -174,7 +174,14 @@
                 throw new Error('First argument must be an Object or Constructor. Type must be defined.');
             }
 
-            _.extend(this, init);
+            _.extend(this, _.extend({
+                omit: false,
+                name: null,
+                label: null,
+                transform: null,
+                validation: null,
+                type: null
+            }, init));
         }
 
         function filterIsNotNumberCallback(val) {
@@ -298,7 +305,7 @@
                 nodes = nodes.filter(function (node) {
                     var value = node.value;
                     var pattern = node.pattern;
-                    return !_.isEmpty(value, allowNull, pattern.allowNull) && _.isExpectedTypeOrNull(value, pattern.type);
+                    return !_.isEmpty(value, allowNull, pattern.allowNull) && !pattern.omit && _.isExpectedTypeOrNull(value, pattern.type);
                 });
             }
 
@@ -405,12 +412,12 @@
         var transformers = {};
 
         function iterateNode(node) {
-            var transformers = node.pattern.transformers;
+            var transformers = node.pattern.transform;
 
             if (Array.isArray(transformers)) {
                 for (var i = 0, length = transformers.length; i < length; i += 1) {
                     var transformer = transformers[i];
-                    node.value = transformer(node.value, node.key);
+                    node.value = transformer(node.value, node.key, node.pattern.type);
                 }
             }
         }
@@ -478,6 +485,10 @@
 
         register('toStringType', build(function (value) {
             return value.toString();
+        }));
+
+        register('toType', build(function (value, key, type) {
+            return type(value);
         }));
 
         register('default', build(function (params, value) {

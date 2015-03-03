@@ -1,4 +1,7 @@
 (function () {
+    //TODO: Added stage rules
+    //TODO: Added more detailed test & documentation
+    //TODO: Added performance tests
     var ISSchemaTools = (function () {
         var root = {};
         var chainNs = {};
@@ -516,7 +519,8 @@
         var validators = {};
         var regexPatterns = {
             email: /^([\w\-\.]+)@((\[[\d]{1,3}\.[\d]{1,3}\.[\d]{1,3}\.)|(([\w\-]+\.)+))([a-zA-Z]{2,4}|\d{1,3})(\]?)$/,
-            digits: /^\d+$/
+            digits: /^\d+$/,
+            url: /^(https?|ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i
         };
 
         var messages = {
@@ -528,7 +532,8 @@
             'range': '${0} must be between ${2} and ${3}',
             'email': '${0} must be correct',
             'type': '${0} must have appropriate type',
-            'digits': '${0} must contain only digits'
+            'digits': '${0} must contain only digits',
+            'url': '${0} must contain correct url of resource'
         };
 
         function register(validatorName, method) {
@@ -573,7 +578,7 @@
                     args = params = validateObj[validatorName];
 
                     if (!_.isFunction(validator)) {
-                        throw new Error('Validator ${0} must be defined');
+                        throw new Error(_.format('Validator ${0} must be defined', validatorName));
                     } else if (_.isEmpty(params) || _.isBoolean(params) && !params) {
                         continue;
                     }
@@ -623,6 +628,10 @@
 
         register('digits', function (val) {
             return _.isEmpty(val) || regexPatterns.digits.test(val);
+        });
+
+        register('url', function (val) {
+            return _.isEmpty(val) || regexPatterns.url.test(val);
         });
 
         register('minLength', function (val, minLength) {

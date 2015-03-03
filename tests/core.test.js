@@ -4,6 +4,7 @@ var t = require('../src/isschema-tools');
 //Added accurate tests
 //Added test for Omit params
 //Added test for rule params
+//Added performance tests and etc..
 
 describe('test core methods of ISSchemaTools', function () {
 

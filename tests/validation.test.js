@@ -1,6 +1,6 @@
 var t = require('../src/isschema-tools');
 
-//I
+//TODO: added test to register validation, to URL/Digit rules, and etc
 describe('test validation module functionality', function () {
     it('test existence of functions of module', function () {
         t.validation.should.have.keys(['validate', 'register', 'messages']);

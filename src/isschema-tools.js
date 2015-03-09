@@ -458,32 +458,32 @@
 
         addToChain('transform', transform);
 
-        register('trim', build(function (value) {
-            return String.prototype.trim.call(value);
+        register('trim', build(function (val) {
+            return _.isString(val) ? val.trim() : val;
         }));
 
-        register('trimLeft', build(function (value) {
-            return String.prototype.trimLeft.call(value);
+        register('trimLeft', build(function (val) {
+            return _.isString(val) ? val.trimLeft() : val;
         }));
 
-        register('trimRight', build(function (value) {
-            return String.prototype.trimRight.call(value);
+        register('trimRight', build(function (val) {
+            return _.isString(val) ? val.trimRight() : val;
         }));
 
-        register('substring', build(function (params, value) {
-            return String.prototype.substring.call(value, params[0], params[1]);
+        register('substring', build(function (params, val) {
+            return _.isString(val) ? val.substring(params[0], params[1]) : val;
         }, true));
 
-        register('replace', build(function (params, value) {
-            return String.prototype.replace.call(value, params[0], params[1]);
+        register('replace', build(function (params, val) {
+            return _.isString(val) ? val.replace(params[0], params[1]) : val;
         }, true));
 
-        register('toUpper', build(function (value) {
-            return String.prototype.toUpperCase.call(value);
+        register('toUpper', build(function (val) {
+            return _.isString(val) ? val.toUpperCase() : val;
         }));
 
-        register('toLower', build(function (value) {
-            return String.prototype.toLowerCase.call(value);
+        register('toLower', build(function (val) {
+            return _.isString(val) ? val.toLowerCase() : val;
         }));
 
         register('toStringType', build(function (value) {
@@ -506,8 +506,8 @@
             transformers: transformers,
             register: register,
             build: build,
-            transform: function () {
-                return self.chain(obj, pattern).transform().build();
+            transform: function (buildOpts) {
+                return self.chain(obj, pattern).transform().build(buildOpts);
             }
         });
 

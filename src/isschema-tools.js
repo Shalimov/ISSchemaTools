@@ -207,7 +207,7 @@
         }
 
         function traverse(obj, fn) {
-            if (!(_.isObject(obj) || _.isFunction(fn))) {
+            if (!(_.isObject(obj) && _.isFunction(fn))) {
                 throw new Error('First should be an Object, second should be a Function');
             }
 
@@ -246,7 +246,7 @@
         }
 
         function matchTraverse(obj, pattern) {
-            if (!(_.isObject(obj) || _.isObject(pattern))) throw new Error('First and Second arguments should be an Object');
+            if (!(_.isObject(obj) && _.isObject(pattern))) throw new Error('First and Second arguments should be an Object');
 
             var nodes = [];
             var stack = [{

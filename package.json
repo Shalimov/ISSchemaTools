@@ -1,0 +1,36 @@
+{
+  "name": "ISSchemaTools",
+  "version": "0.3.0",
+  "description": "Package for Validate, Transform, and Clean object by Schemes",
+  "main": "src/isschema-tools.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Shalimov/ISSchemaTools.git"
+  },
+  "keywords": [
+    "validate",
+    "validation",
+	"valid",
+    "transform",
+    "traverse",
+    "pattern",
+    "clean",
+    "filter",
+    "Object",
+    "Schema",
+    "object",
+    "schema"
+  ],
+  "author": "Shalimov Igor",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Shalimov/ISSchemaTools/issues"
+  },
+  "homepage": "https://github.com/Shalimov/ISSchemaTools"
+}

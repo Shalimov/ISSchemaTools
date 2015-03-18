@@ -619,7 +619,7 @@
         });
 
         register('type', function (val, arg, ruleValues, pattern) {
-            return (!_.isEmpty(val) || val === '') && _.isExpectedTypeOrNull(val, pattern.type);
+            return (!_.isEmpty(val) || val === '') ? _.isExpectedTypeOrNull(val, pattern.type) : true;
         });
 
         register('email', function (val) {

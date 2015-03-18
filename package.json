@@ -1,5 +1,5 @@
 {
-  "name": "ISSchemaTools",
+  "name": "isschematools",
   "version": "0.3.0",
   "description": "Package for Validate, Transform, and Clean object by Schemes",
   "main": "src/isschema-tools.js",

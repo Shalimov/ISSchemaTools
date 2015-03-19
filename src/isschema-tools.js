@@ -650,7 +650,7 @@
             var min = minMax[0];
             var max = minMax[1];
 
-            return _.isEmpty(val) || _.isNumber(val) && min < val && val < max;
+            return _.isEmpty(val) || (_.isNumber(val) && min < val && val < max);
         });
 
         register('equalTo', function (val, ruleName, ruleValues) {
@@ -658,7 +658,7 @@
         });
 
         register('belongsTo', function (val, values) {
-            return values.indexOf(val) !== -1;
+            return _.isEmpty(val) || values.indexOf(val) !== -1;
         });
 
         _.extend(module, {

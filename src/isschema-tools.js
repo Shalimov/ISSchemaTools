@@ -596,7 +596,7 @@
                         validatorResult = messages[validatorName] || messages['invalid'];
                     }
 
-                    validatorResult = _.format(validatorResult, label, value, args);
+                    validatorResult = _.format(validatorResult, label, value, args, pattern.type.name);
 
                     errors.push(detailed ? {
                         ruleName: pattern.name,

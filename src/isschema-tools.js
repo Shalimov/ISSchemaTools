@@ -71,7 +71,7 @@
             },
 
             identity: function (val) {
-                return val
+                return val;
             },
 
             each: function (instance, fn, ctx) {
@@ -215,11 +215,12 @@
             var stack = [createNode(obj, null, null, 1, null, null)];
 
             function iterate(val, key) {
+				var isCircular = false;
                 if (_.isObject(val)) {
                     var path = this.path.slice();
                     var level = path.push(key);
                     var node = createNode(val, key, path, level, this, null);
-                    var isCircular = circularDepend.indexOf(val) !== -1;
+                    isCircular = circularDepend.indexOf(val) !== -1;
 
                     if (!isCircular) {
                         stack.push(node);
@@ -593,7 +594,7 @@
                     }
 
                     if (!validatorResult) {
-                        validatorResult = messages[validatorName] || messages['invalid'];
+                        validatorResult = messages[validatorName] || messages.invalid;
                     }
 
                     validatorResult = _.format(validatorResult, label, value, args, pattern.type.name);

@@ -11,7 +11,7 @@ The idea to create these tools came after long work with MeteorJS & MongoDB.</p>
     <strong>Core Module</strong>
   </li>
   <li>
-    <strong>Transformers Module</strong>
+    <strong>Transform Module</strong>
   </li>
   <li>
     <strong>Validation Module</strong>
@@ -20,7 +20,7 @@ The idea to create these tools came after long work with MeteorJS & MongoDB.</p>
 
 
 <section>
-  <h4><strong>1.</strong> Core Module</h4>
+  <h4><strong>1.</strong>Core Module</h4>
   <p>This module has the following methods:</p>
   <ul>
     <li>
@@ -42,5 +42,5 @@ The idea to create these tools came after long work with MeteorJS & MongoDB.</p>
     </li>
   </ul>
 </section>
-<h4><strong>2.</strong> Transformers Module</h4>
-<h4><strong>3.</strong> Validation Module</h4>
+<h4><strong>2.</strong>Transform Module</h4>
+<h4><strong>3.</strong>Validation Module</h4>

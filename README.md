@@ -1,5 +1,5 @@
 
-This pack contains various tools to work with JavaScript object. It is created to help you avoid monotonous work such as extract data fields from JS object, transform values(trim, substring, replace, and etc..) and validate object schema fields.
+This pack contains various tools to work with JavaScript objects. It is created to help you avoid monotonous work such as extract data fields from JS object, transform values(trim, substring, replace, and etc..) and validate object schema fields.
 The idea to create these tools came after long work with MeteorJS & MongoDB.
 
 # How to install it?
@@ -7,7 +7,7 @@ The idea to create these tools came after long work with MeteorJS & MongoDB.
   npm install isschematools
 ```
 
-This pack consists of the three following modules:
+This pack of the three following modules:
   1. **Core Module**
 	* **Methods:**
 	  * *traverse*
@@ -21,7 +21,8 @@ This pack consists of the three following modules:
 
 #### 1. Core Module
   
- `matchTraverse` & `traverse` functions based on some variation of  BFS algorithm, and they do not use recursion
+  
+ `matchTraverse` & `traverse` functions are based on some variation of  BFS algorithm, and they do not use recursion
 
   This module has the following methods:
   - #### Traverse Function
@@ -82,9 +83,9 @@ This pack consists of the three following modules:
       t.matchTraverse(someObject, pattern);
     ```
     
-    The first param is object for `traverse`.
-    The second param should be a pattern that describes expected structure of object.
-    `matchTraverse` allows to traverse object using special pattern!
+    The first param is an object for `traverse`.
+    The second param should be a pattern that describes expected structure of an object.
+    `matchTraverse` allows to traverse an object using special pattern!
     
     ___
     ##### Example

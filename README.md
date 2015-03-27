@@ -9,12 +9,12 @@ The idea to create these tools came after long work with MeteorJS & MongoDB.
 
 This pack consists of the three following modules:
   1. **Core Module**
-		* **Methods:**
-		  - *traverse*
-		  - *matchTraverse*
-		  - *rule*
-		  - *chain*
-		  - *defineExtension*
+	* **Methods:**
+	  * *traverse*
+	  * *matchTraverse*
+	  * *rule*
+	  * *chain*
+	  * *defineExtension*
   2. **Transform Module**
   3. **Validation Module**
 

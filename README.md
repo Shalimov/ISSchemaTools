@@ -17,3 +17,30 @@ The idea to create these tools came after long work with MeteorJS & MongoDB.</p>
     <strong>Validation Module</strong>
   </li>
 </ol>
+
+
+<section>
+  <h4><strong>1.</strong> Core Module</h4>
+  <p>This module has the following methods:</p>
+  <ul>
+    <li>
+      <h4>Traverse Function</h4>
+      <hr />
+      <code>
+        var t = require('ISSchemaTools');
+      </code>
+      <br/>
+      <code>
+        t.traverse(someObject: Object, callback: Function);
+      </code>
+      <p>
+        The first param should be an object.
+        The second param should be a callback function which will be invoked on each node of object
+      </p>
+      <hr/>
+      <h5>Example</h5>
+    </li>
+  </ul>
+</section>
+<h4><strong>2.</strong> Transformers Module</h4>
+<h4><strong>3.</strong> Validation Module</h4>

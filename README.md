@@ -9,11 +9,19 @@ The idea to create these tools came after long work with MeteorJS & MongoDB.
 
 This pack consists of the three following modules:
   1. **Core Module**
+    * **Methods:**
+      - *traverse*
+      - *matchTraverse*
+      - *rule*
+      - *chain*
+      - *defineExtension*
   2. **Transform Module**
   3. **Validation Module**
 
 
 #### 1. Core Module
+  
+ `matchTraverse` & `traverse` functions based on some variation of  BFS algorithm, and they do not use recursion
 
   This module has the following methods:
   - #### Traverse Function
@@ -41,7 +49,7 @@ This pack consists of the three following modules:
         }
       };
       
-      t.traverse(someObj, function iterator(leafValue, leafKey, parentNode, isCircular) {
+      t.traverse(someObj, function iterator(value, key, type, parentNode, isCircular) {
         console.log(nodeValue);
       });
       
@@ -53,6 +61,37 @@ This pack consists of the three following modules:
       //  {insideProp1Prop3: ...}
       //  'Data'
     ```
+    Where:
+      - **value** - passing node value
+      - **key** - passing node key
+      - **type** - passing node type
+        * 'node' - value has type of `Object` or `Array`
+        * 'leaf' - value of any type except `Object` or `Array`
+      - **parentNode** - reference on parent node (Object type). Has following props:
+        * key - node key (property name)
+        * value - node value (property value)
+        * level - level of object (root level = 1)
+        * path - array which consists of property keys from root object to current node 
+        * parent - reference on parent node
+      - **isCircular** - value of this node is circular reference
       
-<h4><strong>2.</strong>Transform Module</h4>
-<h4><strong>3.</strong>Validation Module</h4>
+  - #### MatchTraverse Function
+    ___
+    ```javascript
+      var t = require('isschematools');
+      t.matchTraverse(someObject, pattern);
+    ```
+    
+    The first param is object for `traverse`.
+    The second param should be a pattern that describes expected structure of object.
+    `matchTraverse` allows to traverse object using special pattern!
+    
+    ___
+    ##### Example
+    ```javascript
+      //In Progress
+      //You can look inside test folder and find some examples of usage
+    ```
+    
+#### 2. Transform Module
+#### 3. Validation Module

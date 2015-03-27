@@ -2,19 +2,19 @@
 This pack contains various tools to work with JavaScript object. It is created to help you avoid monotonous work such as extract data fields from JS object, transform values(trim, substring, replace, and etc..) and validate object schema fields.
 The idea to create these tools came after long work with MeteorJS & MongoDB.
 
-#How to install it?
+# How to install it?
 ```javascript
   npm install isschematools
 ```
 
 This pack consists of the three following modules:
   1. **Core Module**
-    * **Methods:**
-      - *traverse*
-      - *matchTraverse*
-      - *rule*
-      - *chain*
-      - *defineExtension*
+		* **Methods:**
+		  - *traverse*
+		  - *matchTraverse*
+		  - *rule*
+		  - *chain*
+		  - *defineExtension*
   2. **Transform Module**
   3. **Validation Module**
 

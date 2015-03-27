@@ -215,7 +215,7 @@
             var stack = [createNode(obj, null, null, 1, null, null)];
 
             function iterate(val, key) {
-				var isCircular = false;
+                var isCircular = false;
                 if (_.isObject(val)) {
                     var path = this.path.slice();
                     var level = path.push(key);

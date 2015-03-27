@@ -51,7 +51,7 @@ This pack of the three following modules:
       };
       
       t.traverse(someObj, function iterator(value, key, type, parentNode, isCircular) {
-        console.log(nodeValue);
+        console.log(value);
       });
       
       // RESULT:
@@ -63,11 +63,11 @@ This pack of the three following modules:
       //  'Data'
     ```
     Where:
-      - **value** - passing node value
-      - **key** - passing node key
-      - **type** - passing node type
-        * 'node' - value has type of `Object` or `Array`
-        * 'leaf' - value of any type except `Object` or `Array`
+      - **value** - value of processing node
+      - **key** - property name of processing node
+      - **type** - type of processing node
+        * 'node' - type of `Object` or `Array`
+        * 'leaf' - any type except `Object` or `Array`
       - **parentNode** - reference on parent node (Object type). Has following props:
         * key - node key (property name)
         * value - node value (property value)

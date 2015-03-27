@@ -216,11 +216,14 @@
 
             function iterate(val, key) {
                 var isCircular = false;
+                var type = 'leaf';
                 if (_.isObject(val)) {
                     var path = this.path.slice();
                     var level = path.push(key);
                     var node = createNode(val, key, path, level, this, null);
+
                     isCircular = circularDepend.indexOf(val) !== -1;
+                    type = 'node';
 
                     if (!isCircular) {
                         stack.push(node);
@@ -228,7 +231,7 @@
                     }
                 }
 
-                fn(val, key, this, isCircular);
+                fn(val, key, type, this, isCircular);
             }
 
             do {

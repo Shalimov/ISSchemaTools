@@ -41,7 +41,7 @@ This pack consists of the three following modules:
         }
       };
       
-      t.traverse(someObj, function iterator(leafValue, leafKey, parentNode, isCircular) {
+      t.traverse(someObj, function iterator(value, key, type, parentNode, isCircular) {
         console.log(nodeValue);
       });
       

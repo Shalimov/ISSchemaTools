@@ -55,7 +55,7 @@ This pack of the three following modules:
       });
       
       // RESULT:
-      //  'Some data'
+      //  'Some data' 
       //  'Some other data'
       //  {prop1: ...}
       //  [{insideProp1Prop3: ...}]
@@ -73,6 +73,16 @@ This pack of the three following modules:
         * value - node value (property value)
         * level - level of object (root level = 1)
         * path - array which consists of property keys from root object to current node 
+        	```javascript
+        	//for object 
+        	var object = {
+        		node1 : {
+        			node2: 'value'
+        		}
+        	};
+        	
+        	//path for value in node2 will be ['node1', 'node2'];
+        	```
         * parent - reference on parent node
       - **isCircular** - value of this node is circular reference
       
@@ -85,14 +95,79 @@ This pack of the three following modules:
     
     The first param is an object for `traverse`.
     The second param should be a pattern that describes expected structure of an object.
-    `matchTraverse` allows to traverse an object using special pattern!
+    `matchTraverse` allows to traverse an object using special pattern.
     
+    Pattern should describe desired structure of object. Each end node of pattern should be a rule.
+    Rule can contain additional info about end node. At this moment if you try to define rule you should point a type of desired data.
+    ```javascript
+    var t = require('isschematools'); //if you use this tool in browser it should look like: var t = ISSchemaTools;
+    var pattern = {
+    	name: t.rule({type: String}),
+    	surname: t.rule({type: String}),
+    	nested: {
+    		nested: {
+    			value: t.rule({type: String})
+    		}
+    	}
+    };
+    ```
     ___
     ##### Example
     ```javascript
-      //In Progress
-      //You can look inside test folder and find some examples of usage
+      var t = require('isschematools');
+      var model = {
+      	name: 'Sam',
+      	surname: 'Wartington',
+      	contact: {
+      		isPrimary: true,
+      		city: 'Minsk',
+      		phones: ['+000 11 000 22 22', {value: 'not a phone num'}],
+      		address: [{
+      			street: 'Calouss',
+      			building: 9,
+      			room: 10
+      		}, 'not an address']
+      	}
+      };
+      
+      var pattern = {
+      	name: t.rule({type: String}),
+      	surname: t.rule({type: String}),
+      	contact: {
+      		city: t.rule({type: String}),
+      		phones: [t.rule({type: String})],
+      		address: [{
+      			street: t.rule({type: String}),
+      			building: t.rule({type: Number}),
+      			room: t.rule({type: Number})
+      		}]
+      	}
+      };
+      
+      //returns array of nodes which are defined by pattern
+      var nodeList = t.matchTraverse(model, pattern);
+      
+      var valuesWithCorrectType = nodeList.filter(function (node) {
+      	var isNullUndef = (node.value === undefined || node.value === null); 
+      	return !(isNullUndef || node.pattern.type !== node.value.constructor);
+      });
+      
+      var result = valuesWithCorrectType.map(function (node) { return node.value; });
+      /*
+      	result -> ['Sam', 'Wartington', 'Minsk', '+000 11 000 22 22', 9, 10, 'Calouss']
+      */
+      
+      /*
+      	node has following structure: 
+      		* value: value of processed node,
+      		* key: property name of processed node,
+      		* level - level of object (root level = 1),
+        	* path - array which consists of property keys from root object to current node,
+        	* pattern - pattern describes current node
+      */
     ```
+    ___
+    ## DOCS IN PROCESS
     
 #### 2. Transform Module
 #### 3. Validation Module

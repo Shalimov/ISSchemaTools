@@ -1,4 +1,3 @@
-
 This pack contains various tools to work with JavaScript objects. It is created to help you avoid monotonous work such as extract data fields from JS object, transform values(trim, substring, replace, and etc..) and validate object schema fields.
 The idea to create these tools came after long work with MeteorJS & MongoDB.
 
@@ -12,6 +11,8 @@ This pack of the three following modules:
 	* **Methods:**
 	  * *traverse*
 	  * *matchTraverse*
+	  * *vertex*
+	  * *build*
 	  * *rule*
 	  * *chain*
 	  * *defineExtension*
@@ -92,6 +93,10 @@ This pack of the three following modules:
   - #### MatchTraverse Function
     ___
     ```javascript
+
+      /*
+      *	var t = ISSchemaTools; //in browser
+      */
       var t = require('isschematools');
       t.matchTraverse(someObject, pattern);
     ```
@@ -100,9 +105,8 @@ This pack of the three following modules:
     The second param should be a pattern that describes expected structure of an object.
     `matchTraverse` allows to traverse an object using special pattern.
     
-    Pattern should describe desired structure of object. Each end node of pattern should be a rule.
-    Rule can contain additional info about end node. At this moment if you try to define rule you should point a type of desired data.
-	You can extend rule as you wish.
+    Pattern should describe desired structure of object. Each end node of pattern should be a Vertex.
+    Vertex can contain additional info about end node.
 	
     ```javascript
 	/*
@@ -131,26 +135,26 @@ This pack of the three following modules:
       	surname: 'Wartington',
       	contact: {
       		isPrimary: true,
-      		city: 'Minsk',
-      		phones: ['+000 11 000 22 22', {value: 'not a phone num'}],
+      		city: null,
+      		phones: ['+000 11 000 22 22'],
       		address: [{
       			street: 'Calouss',
       			building: 9,
       			room: 10
-      		}, 'not an address']
+      		}]
       	}
       };
       
       var pattern = {
-      	name: t.rule({type: String}),
-      	surname: t.rule({type: String}),
+      	name: t.vertex(),
+      	surname: t.vertex(),
       	contact: {
-      		city: t.rule({type: String}),
-      		phones: [t.rule({type: String})],
+      		city: t.vertex(),
+      		phones: [t.vertex()],
       		address: [{
-      			street: t.rule({type: String}),
-      			building: t.rule({type: Number}),
-      			room: t.rule({type: Number})
+      			street: t.vertex(),
+      			building: t.vertex(),
+      			room: t.vertex()
       		}]
       	}
       };
@@ -158,14 +162,13 @@ This pack of the three following modules:
       //returns array of nodes which are defined by pattern
       var nodeList = t.matchTraverse(model, pattern);
       
-      var valuesWithCorrectType = nodeList.filter(function (node) {
-      	var isNullUndef = (node.value === undefined || node.value === null); 
-      	return !(isNullUndef || node.pattern.type !== node.value.constructor);
+      var cleanNodeList = nodeList.filter(function (node) {
+      	return !(node.value === undefined || node.value === null);
       });
       
-      var result = valuesWithCorrectType.map(function (node) { return node.value; });
+      var result = cleanNodeList.map(function (node) { return node.value; });
       /*
-      	result -> ['Sam', 'Wartington', 'Minsk', '+000 11 000 22 22', 9, 10, 'Calouss']
+      	result -> ['Sam', 'Wartington', '+000 11 000 22 22', 9, 10, 'Calouss']
       */
       
       /*
@@ -174,7 +177,26 @@ This pack of the three following modules:
       		* key: property name of processed node,
       		* level - level of object (root level = 1),
         	* path - array which consists of property keys from root object to current node,
-        	* pattern - pattern describes current node
+        	* pattern - pattern describes current node (Vertex means empty pattern type)
+      */
+
+
+      result = t.build(nodeList);
+
+
+      /*
+        result -> {
+          name: 'Sam',
+          surname: 'Wartington',
+          contact: {
+            phones: ['+000 11 000 22 22'],
+            address: [{
+              street: 'Calouss',
+              building: 9,
+              room: 10
+            }]
+          }
+        }
       */
     ```
     ___

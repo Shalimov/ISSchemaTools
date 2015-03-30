@@ -519,7 +519,7 @@
 		}));
 
 		this.addMethodToChain('transform', transform);
-		
+
 		_.extend(module, {
 			transformers: transformers,
 			register: register,

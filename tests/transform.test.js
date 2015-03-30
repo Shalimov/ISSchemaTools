@@ -98,29 +98,6 @@ describe('test transformers module functionality', function () {
         }).transform().build().should.be.eql({name: 'good skills'});
     });
 
-
-    it('test transform methods #toString', function () {
-        var tr = t.transform.transformers;
-
-        t.chain({
-            name: 1
-        }, {
-            name: t.rule({
-                type: Number,
-                transform: [tr.toStringType]
-            })
-        }).transform().build().should.be.eql({name: "1"});
-
-        t.chain({
-            name: [1, 2, 3, 4, 5]
-        }, {
-            name: t.rule({
-                type: Array,
-                transform: [tr.toStringType]
-            })
-        }).transform().build().should.be.eql({name: '1,2,3,4,5'});
-    });
-
     it('test transform methods #nullIfEmpty', function () {
         var tr = t.transform.transformers;
 

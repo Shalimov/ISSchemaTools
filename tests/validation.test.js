@@ -51,15 +51,6 @@ describe('test validation module functionality', function () {
             })
         };
 
-        var messages = t.chain({name: null}, pattern).validate();
-        messages.should.be.eql(['name must have appropriate type']);
-
-        messages = t.chain({name: undefined}, pattern).validate();
-        messages.should.be.eql(['name must have appropriate type']);
-
-        messages = t.chain({name: NaN}, pattern).validate();
-        messages.should.be.eql(['name must have appropriate type']);
-
         messages = t.chain({name: 1}, pattern).validate();
         messages.should.be.eql(['name must have appropriate type']);
 

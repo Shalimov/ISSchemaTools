@@ -343,5 +343,11 @@ describe('test core methods of ISSchemaTools', function () {
                     }
                 });
         });
+
+        //Add more detailed tests
+        it('test separate build', function () {
+            var nodes = t.matchTraverse({name: 'Illusion', when: 'Come on'}, {name: t.vertex()});
+            t.build(nodes, {clean: true}).should.be.eql({name: 'Illusion'});
+        });
     });
 });

@@ -36,9 +36,9 @@ This pack of the three following modules:
     ___
     ##### Example
     ```javascript
-		/*
-			*	var t = ISSchemaTools; //in browser
-		*/
+	/*
+	*	var t = ISSchemaTools; //in browser
+	*/
       var t = require('isschematools');
       
       var someObj = {
@@ -106,7 +106,7 @@ This pack of the three following modules:
 	
     ```javascript
 	/*
-		*	var t = ISSchemaTools; //in browser
+	*	var t = ISSchemaTools; //in browser
 	*/
     var t = require('isschematools'); 
     var pattern = {

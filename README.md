@@ -36,6 +36,9 @@ This pack of the three following modules:
     ___
     ##### Example
     ```javascript
+		/*
+			*	var t = ISSchemaTools; //in browser
+		*/
       var t = require('isschematools');
       
       var someObj = {
@@ -99,8 +102,13 @@ This pack of the three following modules:
     
     Pattern should describe desired structure of object. Each end node of pattern should be a rule.
     Rule can contain additional info about end node. At this moment if you try to define rule you should point a type of desired data.
+	You can extend rule as you wish.
+	
     ```javascript
-    var t = require('isschematools'); //if you use this tool in browser it should look like: var t = ISSchemaTools;
+	/*
+		*	var t = ISSchemaTools; //in browser
+	*/
+    var t = require('isschematools'); 
     var pattern = {
     	name: t.rule({type: String}),
     	surname: t.rule({type: String}),
@@ -114,6 +122,9 @@ This pack of the three following modules:
     ___
     ##### Example
     ```javascript
+	/*
+		*	var t = ISSchemaTools; //in browser
+	*/
       var t = require('isschematools');
       var model = {
       	name: 'Sam',

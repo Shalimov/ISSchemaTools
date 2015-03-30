@@ -88,7 +88,7 @@ This pack of the three following modules:
         	//path for value in node2 will be ['node1', 'node2'];
         	```
         * parent - reference on parent node
-      - **isCircular** - value of this node is circular reference
+      - **isCircular** - shows if value of this node is circular reference
       
   - #### MatchTraverse Function
     ___

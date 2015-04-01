@@ -544,6 +544,7 @@
 		var messages = {
 			'required': '${0} is required',
 			'invalid': '${0} is invalid',
+			'belongsTo': '${0} must be one of (${2})',
 			'minLength': '${0} must have length at least ${2}',
 			'maxLength': '${0} must have length at most ${2}',
 			'eqlLength': '${0} must have length eql ${2}',
@@ -551,8 +552,7 @@
 			'email': '${0} must be correct',
 			'type': '${0} must have appropriate type',
 			'digits': '${0} must contain only digits',
-			'url': '${0} must contain correct url of resource',
-			'belongsTo': '${0} must be one of (${2})'
+			'url': '${0} must contain correct url of resource'
 		};
 
 		function register(validatorName, method) {
@@ -603,7 +603,7 @@
 					}
 
 					if (!Array.isArray(params) && _.isObject(params)) {
-						args = params.args;
+						args = params.args || params;
 						validatorMessage = params.message;
 					}
 
@@ -617,9 +617,9 @@
 
 					if(_.isFunction(validatorMessage)) {
 						validatorMessage = validatorMessage(label, value, args, pattern.type.name);
+					} else if(_.isString(validatorMessage)){
+						validatorMessage = _.format(validatorMessage, label, value, args, pattern.type.name);
 					}
-
-					validatorMessage = _.format(validatorMessage, label, value, args, pattern.type.name);
 
 					errors.push(detailed ? {
 						ruleName: pattern.name,

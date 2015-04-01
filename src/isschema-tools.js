@@ -588,7 +588,7 @@
 				var value = node.value;
 				var label = pattern.label || pattern.name;
 				var keys = Object.keys(validateObj);
-				var validatorName, validator, params, validatorResult, args;
+				var validatorName, validator, params, validatorMessage, args;
 
 				for (var i = 0, length = keys.length; i < length; i += 1) {
 					validatorName = keys[i];
@@ -597,31 +597,35 @@
 
 					if (!_.isFunction(validator)) {
 						throw new Error(_.format('Validator ${0} must be defined', validatorName));
-					} else if (_.isEmpty(params) || _.isBoolean(params) && !params) {
+					} else if (_.isEmpty(params) || (_.isBoolean(params) && !params)) {
 						continue;
 					}
 
 					if (!Array.isArray(params) && _.isObject(params)) {
 						args = params.args;
-						validatorResult = params.message;
+						validatorMessage = params.message;
 					}
 
 					if (validator(value, args, ruleValues, pattern) === true) {
 						continue;
 					}
 
-					if (!validatorResult) {
-						validatorResult = messages[validatorName] || messages.invalid;
+					if (!validatorMessage) {
+						validatorMessage = messages[validatorName] || messages.invalid;
 					}
 
-					validatorResult = _.format(validatorResult, label, value, args, pattern.type.name);
+					if(_.isFunction(validatorMessage)) {
+						validatorMessage = validatorMessage(label, value, args, pattern.type.name);
+					}
+
+					validatorMessage = _.format(validatorMessage, label, value, args, pattern.type.name);
 
 					errors.push(detailed ? {
 						ruleName: pattern.name,
 						key: node.key,
 						value: value,
-						error: validatorResult
-					} : validatorResult);
+						error: validatorMessage
+					} : validatorMessage);
 
 					break;
 				}

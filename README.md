@@ -105,8 +105,8 @@ This pack of the three following modules:
     The second param should be a pattern that describes expected structure of an object.
     `matchTraverse` allows to traverse an object using special pattern.
     
-    Pattern should describe desired structure of object. Each end node of pattern should be a Vertex.
-    Vertex can contain additional info about end node.
+    Pattern should describe desired structure of object. Each end node of pattern should be a Vertex or Rule.
+    Rule can contain additional info about end node.
 	
     ```javascript
 	/*
@@ -114,11 +114,11 @@ This pack of the three following modules:
 	*/
     var t = require('isschematools'); 
     var pattern = {
-    	name: t.rule({type: String}),
-    	surname: t.rule({type: String}),
+    	name: t.vertex(),
+    	surname: t.vertex(),
     	nested: {
     		nested: {
-    			value: t.rule({type: String})
+    			value: t.vertex()
     		}
     	}
     };

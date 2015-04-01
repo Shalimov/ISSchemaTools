@@ -551,7 +551,8 @@
 			'email': '${0} must be correct',
 			'type': '${0} must have appropriate type',
 			'digits': '${0} must contain only digits',
-			'url': '${0} must contain correct url of resource'
+			'url': '${0} must contain correct url of resource',
+			'belongsTo': '${0} must be one of (${2})'
 		};
 
 		function register(validatorName, method) {

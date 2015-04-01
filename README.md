@@ -200,7 +200,16 @@ This pack of the three following modules:
       */
     ```
     ___
-    ## DOCS IN PROCESS
+    
+    - #### Rule Function
+	
+	- #### Build Function
+	
+	- #### Chain Function
+	
+	- #### DefineExtensison Function
+ 
+## DOCS IN PROCESS
     
 #### 2. Transform Module
 #### 3. Validation Module

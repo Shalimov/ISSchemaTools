@@ -169,7 +169,7 @@
 
 		function Rule(init) {
 			_.extend(this, _.extend({
-				omit: false,
+				omit: null,
 				name: null,
 				label: null,
 				transform: null,

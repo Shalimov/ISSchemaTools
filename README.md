@@ -203,7 +203,7 @@ This pack of the three following modules:
     
   - #### Rule Function
 	
-	Pattern for the `matchTraverse` function can be defined by using rules. Rule it some kind of metadata which is describe a field, and can be used for your processing functions or other needs.
+	Pattern for the `matchTraverse` function can be defined by using rules. Rule is some kind of metadata which is describe a field, and can be used for your processing functions or other needs.
 	You can declare rule by using `t.rule` function. You should pass in `t.rule` expected type of data, which is contained in node. Type of expected data is only one required param for `t.rule` function.
 	```javascript
 	t.rule({type: Array}); //type must be a Ctor function

@@ -201,7 +201,61 @@ This pack of the three following modules:
     ```
     ___
     
-    - #### Rule Function
+  - #### Rule Function
+	
+	Pattern for the `matchTraverse` function can be defined by using rules. Rule it some kind of metadata which is describe a field, and can be used for your processing functions or other needs.
+	You can declare rule by using `t.rule` function. You should pass in `t.rule` expected type of data, which is contained in node. Type of expected data is only one required param for `t.rule` function.
+	```javascript
+	t.rule({type: Array}); //type must be a Ctor function
+	t.rule(Array); //Short declaration
+	```
+
+	```javascript
+	/*
+    *   var t = ISSchemaTools; //in browser
+	*/
+  	var t = require('isschematools');
+	var model = {
+		name: 'John',
+		surname: 'Doe',
+		contact: {
+	 		city: 'Minsk'
+	 	}
+	};
+	
+	var pattern = {
+		name: t.rule({
+			type: String
+		}),
+		surname: t.rule({
+			type: String
+		}),
+		contact: {
+			city: t.rule({
+				type: String
+				mymetadata: ['My Meta'],
+				mymeta: 'My Meta'
+			})
+		}
+	};
+	
+	var nodes = t.matchTraverse(model, pattern);
+	
+	nodes = nodes.filter(function (node) {
+		return !!node.pattern.mymeta;
+	});
+	
+	var result = t.build(nodes);
+	/*
+		result => {
+			contact: {
+				city: 'Minsk'
+			}
+		}
+	*/
+	```
+	
+	
 	
 	- #### Build Function
 	

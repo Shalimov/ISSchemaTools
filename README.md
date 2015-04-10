@@ -1,5 +1,5 @@
-This pack contains various tools to work with JavaScript objects. It is created to help you avoid monotonous work such as extract data fields from JS object, transform values(trim, substring, replace, and etc..) and validate object schema fields.
-The idea to create these tools came after long work with MeteorJS & MongoDB.
+>	This pack contains various tools to work with JavaScript objects. It is created to help you avoid monotonous work such as extract data fields from JS object, transform values(trim, substring, replace, and etc..) and validate object schema fields.
+>	The idea to create these tools came after long work with MeteorJS & MongoDB.
 
 # How to install it?
 
@@ -47,10 +47,12 @@ This pack of the three following modules:
         -   range
         -   equalTo
         -   belongsTo
+        
+___
 
 ####	1. Core Module
   
-`matchTraverse` & `traverse` functions are based on some variation of  BFS algorithm, and they do not use recursion
+>   `matchTraverse` & `traverse` functions are based on some variation of  BFS algorithm, and they do not use recursion
 
 This module has the following methods:
 
@@ -62,11 +64,11 @@ ___
 	t.traverse(someObject, callback);
 ```
 	
-The first param should be an object.
-The second param should be a callback function which will be invoked on each node of object
+>   The first param should be an object.
+>   The second param should be a callback function which will be invoked on each node of object
 ___
 	
-#####	Example
+#####	Example:
 
 ```javascript
 	/*
@@ -98,7 +100,7 @@ ___
 	//  {insideProp1Prop3: ...}
 	//  'Data'
 ```
-Where:
+>	Where:
 - **value** - value of processing node
 - **key** - property name of processing node
 - **type** - type of processing node
@@ -134,12 +136,12 @@ ___
 	t.matchTraverse(someObject, pattern);
 ```
 		
-The first param is an object for `traverse`.
-The second param should be a pattern that describes expected structure of an object.
+>	The first param is an object for `traverse`.
+>	The second param should be a pattern that describes expected structure of an object.
 `matchTraverse` allows to traverse an object using special pattern.
 
-Pattern should describe desired structure of object. Each end node of pattern should be a Vertex or Rule.
-Rule can contain additional info about end node.
+>	Pattern should describe desired structure of object. Each end node of pattern should be a Vertex or Rule.
+>	Rule can contain additional info about end node.
 		
 ```javascript
 
@@ -159,7 +161,7 @@ Rule can contain additional info about end node.
 	
 ```
 
-#####	Example
+#####	Example:
 ```javascript
 	/*
 		*	var t = ISSchemaTools; //in browser
@@ -238,14 +240,14 @@ Rule can contain additional info about end node.
 ___
 ####	-	Rule Function
 
-Pattern for the `matchTraverse` function can be defined by using rules. Rule is some kind of metadata which is describe a field, and can be used for your processing functions or other needs.
-You can declare rule by using `t.rule` function. You should pass in `t.rule` expected type of data, which is contained in node. Type of expected data is only one required param for `t.rule` function.
+>	Pattern for the `matchTraverse` function can be defined by using rules. Rule is some kind of metadata which is describe a field, and can be used for your processing functions or other needs.
+>	You can declare rule by using `t.rule` function. You should pass in `t.rule` expected type of data, which is contained in node. Type of expected data is only one required param for `t.rule` function.
 
 ```javascript
 	t.rule({type: Array}); //type must be a Ctor function
 	t.rule(Array); //Short declaration
 ```
-
+####    Example:
 ```javascript
 	/*
 	*   var t = ISSchemaTools; //in browser
@@ -289,6 +291,30 @@ You can declare rule by using `t.rule` function. You should pass in `t.rule` exp
 			}
 		}
 	*/
+```
+
+>	Besides `type` you can use following options inside a `t.rule`:
+-	omit 			(Boolean | Function:Boolean)
+-	name 			(String)
+-	label 			(String)
+-	type 			(Function)
+-	transform 		(Array)
+-	validation 		(Object)
+
+```javascript
+	var t = ISSchemaTools || require('isschematools');
+	var tr = t.transform.transformers;
+	
+	t.rule({
+		omit: true,															//More details in description of build function 
+		name: 'Name',														//Name of node (more details #Validation Module)
+		label: 'LabelName',													//Alias for field (more details #Validation Module)
+		type: (String, Boolean, Function, Object, Array, Number, RegExp), 	//Any named constructor function
+		transform: [tr.trim], 												//Array of transformer methods (more details will be pointed out in description for #Transform Module)
+		validation: { 														//Object with validation rules (more details will be pointed out in description for #Validation Module)
+			required: true
+		}
+	})
 ```
 	
 ####	-	Build Function

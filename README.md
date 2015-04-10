@@ -11,13 +11,13 @@ This pack of the three following modules:
 
 1.  **Core Module**
     +   Methods:
-        - **traverse**
-        - **matchTraverse**
-        - **vertex**
-        - **build**
-        - **rule**
-        - **chain**
-        - **defineExtension**
+        - **[traverse](#traversefn)**
+        - **[matchTraverse](#matchtraversefn)**
+        - **[vertex](#vertexfn)**
+        - **[build](#buildfn)**
+        - **[rule](#rulefn)**
+        - **[chain](#chainfn)**
+        - **[defineExtension](#defineextfn)**
 2. 	**Transform Module**
     +   Methods:
         -   **transform**
@@ -57,7 +57,7 @@ ___
 This module has the following methods:
 
 ___
-####	-	Traverse Function
+####	-	<a name="traversefn"></a>Traverse Function
 
 ```javascript
 	var t = require('isschematools');
@@ -125,7 +125,7 @@ ___
 - **isCircular** - shows if value of this node is circular reference
   
 ___
-####	-	MatchTraverse Function
+####	-	<a name='matchtraversefn'></a>MatchTraverse Function
 
 ```javascript
 
@@ -140,7 +140,7 @@ ___
 >	The second param should be a pattern that describes expected structure of an object.
 `matchTraverse` allows to traverse an object using special pattern.
 
->	Pattern should describe desired structure of object. Each end node of pattern should be a Vertex or Rule.
+>	<a name="vertexfn"></a>Pattern should describe desired structure of object. Each end node of pattern should be a Vertex or Rule.
 >	Rule can contain additional info about end node.
 		
 ```javascript
@@ -238,7 +238,7 @@ ___
 ```
 
 ___
-####	-	Rule Function
+####	-	<a name='rulefn'></a>Rule Function
 
 >	Pattern for the `matchTraverse` function can be defined by using rules. Rule is some kind of metadata which is describe a field, and can be used for your processing functions or other needs.
 >	You can declare rule by using `t.rule` function. You should pass in `t.rule` expected type of data, which is contained in node. Type of expected data is only one required param for `t.rule` function.
@@ -293,13 +293,16 @@ ___
 	*/
 ```
 
->	Besides `type` you can use following options inside a `t.rule`:
--	omit 			(Boolean | Function:Boolean)
+
+Besides `type` you can use following options(#reserved) inside a `t.rule`:
+-	[omit](#buildfnomit) 			(Boolean | Function:Boolean)
 -	name 			(String)
 -	label 			(String)
 -	type 			(Function)
 -	transform 		(Array)
 -	validation 		(Object)
+
+
 
 ```javascript
 	var t = ISSchemaTools || require('isschematools');
@@ -317,13 +320,63 @@ ___
 	})
 ```
 	
-####	-	Build Function
+####	-	<a name="buildfn"></a>Build Function
+>	`t.build` function provides ability to gather result of `matchTraveres` into new object.
+Lets try to find out how should we work with it:
+```javascript
+	var t = require('isschematools');
+	
+	var listOfNodes = t.matchTraverse({
+		name: 'John',
+		surname: 'Doe',
+		age: 29
+	}, {
+		name: t.rule(String),
+		surname: t.rule(String),
+		age: t.rule(Number)
+	});
+	
+	var obj = t.build(listOfNodes);
+	console.log(obj);
+	/*
+		{
+			name: 'John',
+			surname: 'Doe',
+			age: 29
+		}
+	*/
+	
+	var nodes = listOfNodes.filter(function (node) { return node.key !== 'surname'; });
+	
+	obj = t.build(nodes);
+	console.log(obj);
+	
+	/*
+		{
+			name: 'John',
+			age: 29
+		}
+	*/
+	
+	var nodes = listOfNodes.filter(function (node) { return node.value !== 29; });
+	
+	obj = t.build(nodes);
+	console.log(obj);
+	
+	/*
+		{
+			name: 'John',
+			surname: 'Doe'
+		}
+	*/
+```
 
-####	-	Chain Function
 
-####	-	DefineExtensison Function
- 
-## DOCS IN PROCESS
+####	-	<a name="chainfn"></a>Chain Function
+
+####	-	<a name="defineextfn"></a>DefineExtensison Function
     
 #### 2. Transform Module
 #### 3. Validation Module
+
+## DOCS IN PROGRESS

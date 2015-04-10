@@ -48,14 +48,14 @@ This pack of the three following modules:
         -   equalTo
         -   belongsTo
 
-#### 1. Core Module
+####	1. Core Module
   
 `matchTraverse` & `traverse` functions are based on some variation of  BFS algorithm, and they do not use recursion
 
 This module has the following methods:
 
 ___
-- #### Traverse Function
+####	-	Traverse Function
 
 ```javascript
 	var t = require('isschematools');
@@ -66,7 +66,7 @@ The first param should be an object.
 The second param should be a callback function which will be invoked on each node of object
 ___
 	
-##### Example
+#####	Example
 
 ```javascript
 	/*
@@ -123,7 +123,7 @@ Where:
 - **isCircular** - shows if value of this node is circular reference
   
 ___
-- #### MatchTraverse Function
+####	-	MatchTraverse Function
 
 ```javascript
 
@@ -159,7 +159,7 @@ Rule can contain additional info about end node.
 	
 ```
 
-##### Example
+#####	Example
 ```javascript
 	/*
 		*	var t = ISSchemaTools; //in browser
@@ -236,7 +236,7 @@ Rule can contain additional info about end node.
 ```
 
 ___
-- #### Rule Function
+####	-	Rule Function
 
 Pattern for the `matchTraverse` function can be defined by using rules. Rule is some kind of metadata which is describe a field, and can be used for your processing functions or other needs.
 You can declare rule by using `t.rule` function. You should pass in `t.rule` expected type of data, which is contained in node. Type of expected data is only one required param for `t.rule` function.
@@ -291,11 +291,11 @@ You can declare rule by using `t.rule` function. You should pass in `t.rule` exp
 	*/
 ```
 	
-- #### Build Function
+####	-	Build Function
 
-- #### Chain Function
+####	-	Chain Function
 
-- #### DefineExtensison Function
+####	-	DefineExtensison Function
  
 ## DOCS IN PROCESS
     

@@ -53,8 +53,9 @@ This pack of the three following modules:
 `matchTraverse` & `traverse` functions are based on some variation of  BFS algorithm, and they do not use recursion
 
 This module has the following methods:
-- #### Traverse Function
+
 ___
+- #### Traverse Function
 
 ```javascript
 	var t = require('isschematools');
@@ -121,8 +122,9 @@ Where:
 	* parent - reference on parent node
 - **isCircular** - shows if value of this node is circular reference
   
-- #### MatchTraverse Function
 ___
+- #### MatchTraverse Function
+
 ```javascript
 
 	/*
@@ -156,7 +158,7 @@ Rule can contain additional info about end node.
 	};
 	
 ```
-___
+
 ##### Example
 ```javascript
 	/*
@@ -232,8 +234,9 @@ ___
 	*/
 ```
 
-- #### Rule Function
 ___
+- #### Rule Function
+
 Pattern for the `matchTraverse` function can be defined by using rules. Rule is some kind of metadata which is describe a field, and can be used for your processing functions or other needs.
 You can declare rule by using `t.rule` function. You should pass in `t.rule` expected type of data, which is contained in node. Type of expected data is only one required param for `t.rule` function.
 

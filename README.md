@@ -323,8 +323,9 @@ Besides `type` you can use following options(#reserved) inside a `t.rule`:
 ####	-	<a name="buildfn"></a>Build Function
 >	`t.build` function provides ability to gather result of `matchTraveres` into new object.
 Lets try to find out how should we work with it:
+
 ```javascript
-	var t = require('isschematools');
+	var t = require('isschematools'); //var t = ISSchemaTools;
 	
 	var listOfNodes = t.matchTraverse({
 		name: 'John',
@@ -369,12 +370,12 @@ Lets try to find out how should we work with it:
 			surname: 'Doe'
 		}
 	*/
+	
 ```
 
+####	-	<a name="chainfn"></a> Chain Function
 
-####	-	<a name="chainfn"></a>Chain Function
-
-####	-	<a name="defineextfn"></a>DefineExtensison Function
+####	-	<a name="defineextfn"></a >DefineExtensison Function
     
 #### 2. Transform Module
 #### 3. Validation Module

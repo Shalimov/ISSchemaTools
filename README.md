@@ -165,40 +165,41 @@ Rule can contain additional info about end node.
 		*	var t = ISSchemaTools; //in browser
 	*/
 	var t = require('isschematools');
+	
 	var model = {
-	  name: 'Sam',
-	  surname: 'Wartington',
-	  contact: {
-	  	isPrimary: true,
-	  	city: null,
-	  	phones: ['+000 11 000 22 22'],
-	  	address: [{
-	  		street: 'Calouss',
-	  		building: 9,
-	  		room: 10
-	  	}]
-	  }
+		name: 'Sam',
+		surname: 'Wartington',
+		contact: {
+			isPrimary: true,
+			city: null,
+			phones: ['+000 11 000 22 22'],
+			address: [{
+				street: 'Calouss',
+				building: 9,
+				room: 10
+			}]
+		}
 	};
 	  
 	var pattern = {
-	  name: t.vertex(),
-	  surname: t.vertex(),
-	  contact: {
-	  	city: t.vertex(),
-	  	phones: [t.vertex()],
-	  	address: [{
-	  		street: t.vertex(),
-	  		building: t.vertex(),
-	  		room: t.vertex()
-	  	}]
-	  }
+		name: t.vertex(),
+		surname: t.vertex(),
+		contact: {
+			city: t.vertex(),
+			phones: [t.vertex()],
+			address: [{
+				street: t.vertex(),
+				building: t.vertex(),
+				room: t.vertex()
+			}]
+		}
 	};
 	  
 	//returns array of nodes which are defined by pattern
 	var nodeList = t.matchTraverse(model, pattern);
 	
 	var cleanNodeList = nodeList.filter(function (node) {
-	  return !(node.value === undefined || node.value === null);
+		return !(node.value === undefined || node.value === null);
 	});
 	
 	var result = cleanNodeList.map(function (node) { return node.value; });
@@ -249,13 +250,13 @@ You can declare rule by using `t.rule` function. You should pass in `t.rule` exp
 	/*
 	*   var t = ISSchemaTools; //in browser
 	*/
-	  var t = require('isschematools');
+	var t = require('isschematools');
 	var model = {
 		name: 'John',
 		surname: 'Doe',
 		contact: {
-	 		city: 'Minsk'
-	 	}
+		 	city: 'Minsk'
+		 }
 	};
 	
 	var pattern = {

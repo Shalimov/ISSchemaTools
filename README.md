@@ -427,7 +427,7 @@ Returns `Chain wrapper object`.
 
 Example:
 
-``javascript
+```javascript
 	
 	var model = {
 		filter: {

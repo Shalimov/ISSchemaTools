@@ -294,7 +294,7 @@ ___
 ```
 
 
-Besides `type` you can use following options(#reserved) inside a `t.rule`:
+> Besides `type` you can use following options(#reserved) inside a `t.rule`:
 -	[omit](#buildfnomit) 			(Boolean | Function:Boolean)
 -	name 			(String)
 -	label 			(String)
@@ -333,10 +333,10 @@ Lets try to find out how should we work with it:
 	var listOfNodes = t.matchTraverse(__obj__, __pattern__);
 	var result = t.build(listOfNodes, __options__);
 ```
-Where:
+> Where:
 *	listOfNodes - result of `t.matchTraverse` function
 *	options
-	+	clean		- can be `true` or `false`, if value `true` nodes which are obeyed by following rules will be excluded:
+	+	clean		- can be `true` or `false`, if value is `true` then nodes which obey following rules will be excluded:
 		*	value is (NaN, Infinite, undefined, "" or null*)
 		*	type of value is incorrect
 		*	omit value for node is equal `true`, or omit function gives `true`
@@ -346,52 +346,119 @@ Where:
 	var t = require('isschematools'); //var t = ISSchemaTools;
 	
 	var listOfNodes = t.matchTraverse({
-		name: 'John',
-		surname: 'Doe',
-		age: 29
+		name: 'slim',
+		surname: 'shady',
+		city: undefined,
+		country: null
 	}, {
-		name: t.rule(String),
+		name: t.rule(String), // Short declaration of rule the same {type: String} 
 		surname: t.rule(String),
-		age: t.rule(Number)
+		city: t.rule({
+			type: String
+		}),
+		country: t.rule({
+			type: String
+		})
 	});
 	
-	var obj = t.build(listOfNodes);
-	console.log(obj);
-	/*
-		{
-			name: 'John',
-			surname: 'Doe',
-			age: 29
-		}
-	*/
+	t.build(listOfNodes); // => {name: 'slim', surname: 'shady', city: undefined, country: null}
+	t.build(listOfNodes, {clean: true}); // => {name: 'slim', surname: 'shady'}
+	t.build(listOfNodes, {clean: true, allowNull: true}); // => {name: 'slim', surname: 'shady', country: null}
 	
-	var nodes = listOfNodes.filter(function (node) { return node.key !== 'surname'; });
+	//***********//
 	
-	obj = t.build(nodes);
-	console.log(obj);
+	listOfNodes = t.matchTraverse({
+		name: null,
+		surname: null,
+		password: '1234567',
+		confirmPassword: '1234567'
+	}, {
+		name: t.rule({
+			type: String
+		}),
+		surname: t.rule({
+			type: String,
+			allowNull: true
+		}),
+		password: t.rule({
+			type: String
+		}),
+		confirmPassword: t.rule({
+			type: String,
+			omit: true,
+			validation: {
+				equalTo: 'password'
+			}
+		})
+	});
 	
-	/*
-		{
-			name: 'John',
-			age: 29
-		}
-	*/
+	t.build(listOfNodes, {clean: true}); //=> {surname: null, password: '1234567'}
 	
-	var nodes = listOfNodes.filter(function (node) { return node.value !== 29; });
+	listOfNodes = t.matchTraverse({
+		name: 'Stringify',
+		surname: 'Dodood'
+	}, {
+		name: t.rule({
+			type: String
+			omit: function (node) {
+				return node.value === 'Stringify';
+			}
+		}),
+		surname: t.rule({
+			type: String,
+			omit: function (node) {
+				return node.value === 'Dorbonsky';
+			}
+		})
+	});
 	
-	obj = t.build(nodes);
-	console.log(obj);
-	
-	/*
-		{
-			name: 'John',
-			surname: 'Doe'
-		}
-	*/
+	t.build(listOfNodes, {clean: true}); // => {surname: 'Dodood'}
 	
 ```
 
 ####	-	<a name="chainfn"></a> Chain Function
+
+Creates a `Chain` object that wraps value with explicit method chaining enabled.
+Returns `Chain wrapper object`.
+
+```javascript
+	t.chain(model, pattern); // => `Chain object`
+```
+
+Example:
+
+``javascript
+	
+	var model = {
+		filter: {
+			name: 'Jo%%%%',
+			surname: '%%urndina%%'
+			age: {$lt: 18}
+		}
+		order: {
+			name: 1
+		}
+	};
+	
+	var pattern = {
+		filter: {
+			name: t.rule(String),
+			surname: t.rule(String),
+			age: t.rule(Object)
+		}
+	};
+	
+	t.chain(model, pattern).build({clean: true, allowNull: true});
+	/*
+		{
+			filter: {
+				name: 'Jo%%%%',
+				surname: '%%urndina%%',
+				age: {$lt: 18}
+			}
+		}
+	*/
+```
 
 ####	-	<a name="defineextfn"></a >DefineExtensison Function
     

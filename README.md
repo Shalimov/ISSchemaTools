@@ -25,28 +25,28 @@ This pack of the three following modules:
         -   **build**
     +   Properties:
         -   **transformers**
-            +   trim/trimRight/trimLeft
-            +   substring/replace
-            +   toUpper/toLower
-            +   nullIfEmpty/default
-            +   toType
+            +   **trim** / **trimRight** / **trimLeft**
+            +   **substring** / **replace**
+            +   **toUpper** / **toLower**
+            +   **nullIfEmpty** / **default**
+            +   **toType**
 3. 	**Validation Module**
     +   Methods:
         -   **validate**
         -   **register**
         -   **messages**
     +   Existing validators
-        -   required
-        -   type
-        -   email
-        -   url
-        -   digits
-        -   maxLength
-        -   minLength
-        -   eqlLength
-        -   range
-        -   equalTo
-        -   belongsTo
+        -   **required**
+        -   **type**
+        -   **email**
+        -   **url**
+        -   **digits**
+        -   **maxLength**
+        -   **minLength**
+        -   **eqlLength**
+        -   **range**
+        -   **equalTo**
+        -   **belongsTo**
         
 ___
 
@@ -301,6 +301,7 @@ Besides `type` you can use following options(#reserved) inside a `t.rule`:
 -	type 			(Function)
 -	transform 		(Array)
 -	validation 		(Object)
+-	[allowNull](#buildfnallownull)		(Boolean)
 
 
 
@@ -321,8 +322,22 @@ Besides `type` you can use following options(#reserved) inside a `t.rule`:
 ```
 	
 ####	-	<a name="buildfn"></a>Build Function
+
+
+
 >	`t.build` function provides ability to gather result of `matchTraveres` into new object.
 Lets try to find out how should we work with it:
+
+```javascript
+	var t = require('isschematools');
+	var listOfNodes = t.matchTraverse(__obj__, __pattern__);
+	t.build(listOfNodes, __options__);
+```
+Where
+	*	listOfNodes - result of `t.matchTraverse` function
+	*	options
+		+	clean		- remove from 
+		+	<a name="buildfnallownull"></a>allowNull	-	
 
 ```javascript
 	var t = require('isschematools'); //var t = ISSchemaTools;

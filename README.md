@@ -461,7 +461,10 @@ Example:
 ```
 
 ####	-	<a name="defineextfn"></a >DefineExtensison Function
-    
+```javascript
+	t.defineExtension(extensionName, function providerFn (...) { ... });
+```
+
 #### 2. Transform Module
 #### 3. Validation Module
 

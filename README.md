@@ -331,14 +331,17 @@ Lets try to find out how should we work with it:
 ```javascript
 	var t = require('isschematools');
 	var listOfNodes = t.matchTraverse(__obj__, __pattern__);
-	t.build(listOfNodes, __options__);
+	var result = t.build(listOfNodes, __options__);
 ```
-Where
-	*	listOfNodes - result of `t.matchTraverse` function
-	*	options
-		+	clean		- remove from 
-		+	<a name="buildfnallownull"></a>allowNull	-	
-
+Where:
+*	listOfNodes - result of `t.matchTraverse` function
+*	options
+	+	clean		- can be `true` or `false`, if value `true` nodes which are obeyed by following rules will be excluded:
+		*	value is (NaN, Infinite, undefined, "" or null*)
+		*	type of value is incorrect
+		*	omit value for node is equal `true`, or omit function gives `true`
+	+	<a name="buildfnallownull"></a>allowNull	-	global identifier which is used to save values with `null` in result object
+	
 ```javascript
 	var t = require('isschematools'); //var t = ISSchemaTools;
 	

@@ -431,7 +431,7 @@
 	})();
 
 	//Transformers declaration
-	ISSchemaTools.defineExtension('transform', function (_, addToChain) {
+	ISSchemaTools.defineExtension('transform', function (_) {
 		var self = this;
 		var module = {};
 		var transformers = {};

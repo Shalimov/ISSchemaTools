@@ -465,6 +465,57 @@ Example:
 	t.defineExtension(extensionName, function providerFn (...) { ... });
 ```
 
+Function defines module extension. Accepted params: 'module name', init function that returns (module) with methods.
+
+#### Example:
+```javascript
+	var t = require('isschematools');
+	t.defineExtension('superduper', function (_) { // _ -> small set of utils (look at tests for core module)
+		function superduper(opts) {
+			_.each(this._nodes, function (node) {
+				var metadata = node.pattern.superduper;
+				if(_.isString(metadata)) {
+					node.value = [metadata, node.value, metadata].join('-');
+				}
+			});
+			
+			return this;
+		}
+		
+		this.addMethodToChain('superduper', superduper);
+		
+		return {
+			superduper: function (model, pattern, opts) {
+				return t.chain(model, patter).superduper(opts).build(opts);
+			}
+		};
+	});
+	
+	var model = {
+		name: 'SomeName',
+		surname: 'SomeSurname'
+	};
+	
+	var pattern = {
+		name: t.rule({
+			type: String,
+			superduper: '@!!!@'
+		}),
+		surname: t.rule({
+			type: String
+		})
+	};
+	
+	var result = t.chain(model, pattern).superduper().build({clean: true});
+	
+	/*
+		result => {
+			name: '@!!!@-SomeName-@!!!@',
+			surname: 'SomeSurname'
+		}
+	*/
+```
+
 #### 2. Transform Module
 #### 3. Validation Module
 

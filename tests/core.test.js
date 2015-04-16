@@ -23,7 +23,7 @@ describe('test core methods of ISSchemaTools', function () {
         });
 
         it('test existence of small set of functions of underscore/lodash', function () {
-            _.should.have.keys(['_toString', '_formatArgs', '_formatObj', 'first', 'groupBy', 'map', 'identity', 'isNaN', 'isString', 'isFunction', 'isObject', 'isNumber', 'isBoolean', 'isEmpty', 'isExpectedTypeOrNull', 'each', 'compact', 'extend', 'format']);
+            _.should.have.keys(['_toString', '_formatArgs', '_formatObj', 'first', 'groupBy', 'map', 'identity', 'isNaN', 'isString', 'isFunction', 'isObject', 'isEqualArrays', 'isNumber', 'initial', 'isBoolean', 'isEmpty', 'isExpectedTypeOrNull', 'each', 'compact', 'extend', 'format']);
 
             _.should.matchEach(function (it) {
                 it.should.be.a.Function;
@@ -275,42 +275,52 @@ describe('test core methods of ISSchemaTools', function () {
             }).build({clean: true}).should.have.keys(['name', 'surname', 'index']);
         });
         /*
-        it('test #clean functionality with Array as Root Object and non object types', function () {
-            var simpleModel = ['val0', {value: 2}, {}, 1, 2, null, {value: 1}, 'val1'];
+         it('test #clean functionality with Array as Root Object and non object types', function () {
+         var simpleModel = ['val0', {value: 2}, {}, 1, 2, null, {value: 1}, 'val1'];
 
-            //t.clean(simpleModel, [t.rule({type: String})]).should.be.eql(['val0', 'val1']);
-            t.chain(simpleModel, [t.rule({type: String})]).build({clean: true})
-                .should
-                .be
-                .matchEach(['val0', 'val1']);
-        });
+         //t.clean(simpleModel, [t.rule({type: String})]).should.be.eql(['val0', 'val1']);
+         t.chain(simpleModel, [t.rule({type: String})]).build({clean: true})
+         .should
+         .be
+         .matchEach(['val0', 'val1']);
+         });
 
-        it('test #clean functionality with Array as Root Object and object types', function () {
-            var simpleModel = ['val0', {value: 2}, {}, 1, 2, null, {value: 1}];
+         it('test #clean functionality with Array as Root Object and object types', function () {
+         var simpleModel = ['val0', {value: 2}, {}, 1, 2, null, {value: 1}];
 
-            //t.clean(simpleModel, [{value: t.rule({type: Number})}]).should.be.eql([null, {value: 2}, null, null, null, null, {value: 1}]);
-            t.chain(simpleModel, [{value: t.rule({type: Number})}]).build({clean: true}).should.be.eql([null, {value: 2}, null, null, null, null, {value: 1}]);
-        });
-        */
+         //t.clean(simpleModel, [{value: t.rule({type: Number})}]).should.be.eql([null, {value: 2}, null, null, null, null, {value: 1}]);
+         t.chain(simpleModel, [{value: t.rule({type: Number})}]).build({clean: true}).should.be.eql([null, {value: 2}, null, null, null, null, {value: 1}]);
+         });
+         */
         it('test #clean functionality with Object as Root and Complex data in nodes', function () {
             var complexModel = {
                 data: {
                     data: {
-                        data: [{
-                            value: [{
-                                data: 1
-                            }, {
-                                data: 2
-                            }, {
-                                abracadbra: 2
-                            }]
-                        }, {
-                            value: [{
-                                data: 4
-                            }]
-                        }, {
-                            jalouse: []
-                        }]
+                        data: [
+                            {
+                                value: [
+                                    {
+                                        data: 1
+                                    },
+                                    {
+                                        data: 2
+                                    },
+                                    {
+                                        abracadbra: 2
+                                    }
+                                ]
+                            },
+                            {
+                                value: [
+                                    {
+                                        data: 4
+                                    }
+                                ]
+                            },
+                            {
+                                jalouse: []
+                            }
+                        ]
                     }
                 }
             };
@@ -318,27 +328,39 @@ describe('test core methods of ISSchemaTools', function () {
             t.chain(complexModel, {
                 data: {
                     data: {
-                        data: [{
-                            value: [{
-                                data: t.rule(Number)
-                            }]
-                        }]
+                        data: [
+                            {
+                                value: [
+                                    {
+                                        data: t.rule(Number)
+                                    }
+                                ]
+                            }
+                        ]
                     }
                 }
             }).build({clean: true}).should.be.eql({
                     data: {
                         data: {
-                            data: [{
-                                value: [{
-                                    data: 1
-                                }, {
-                                    data: 2
-                                }]
-                            }, {
-                                value: [{
-                                    data: 4
-                                }]
-                            }]
+                            data: [
+                                {
+                                    value: [
+                                        {
+                                            data: 1
+                                        },
+                                        {
+                                            data: 2
+                                        }
+                                    ]
+                                },
+                                {
+                                    value: [
+                                        {
+                                            data: 4
+                                        }
+                                    ]
+                                }
+                            ]
                         }
                     }
                 });
@@ -347,7 +369,7 @@ describe('test core methods of ISSchemaTools', function () {
         //Add more detailed tests
         it('test separate build', function () {
             var nodes = t.matchTraverse({name: 'Illusion', when: 'Come on'}, {name: t.vertex()});
-            t.build(nodes, {clean: true}).should.be.eql({name: 'Illusion'});
+            t.build(nodes).should.be.eql({name: 'Illusion'});
         });
     });
 });

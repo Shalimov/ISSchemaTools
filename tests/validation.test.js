@@ -229,7 +229,79 @@ describe('test validation module functionality', function () {
         (messages === null).should.be.true;
     });
 
-    it('test equalTo validator', function () {
+    it('test equalTo validator injector', function () {
+        var model = {
+            cards: [
+                {
+                    type: 'CRC',
+                    number: 'CRC'
+                },
+                {
+                    type: 'BKB',
+                    number: 'BKB'
+                },
+                {
+                    type: 'JOIN',
+                    number: 'JOIN'
+                }
+            ]
+        };
+
+        var pattern = {
+            cards: [
+                {
+                    type: t.rule(String),
+                    number: t.rule({
+                        type: String,
+                        validation: {
+                            equalTo: '@s.type'
+                        }
+                    })
+                }
+            ]
+        };
+
+        var messages = t.chain(model, pattern).validate();
+        (messages === null).should.be.true;
+
+        model = {
+            cards: [
+                {
+                    type: {value: 'CRC'},
+                    number: 'CRC'
+                },
+                {
+                    type: {value: 'BKB'},
+                    number: 'BKB'
+                },
+                {
+                    type: {value: 'JOIN'},
+                    number: 'JOIN'
+                }
+            ]
+        };
+
+        pattern = {
+            cards: [
+                {
+                    type: {
+                        value: t.rule(String)
+                    },
+                    number: t.rule({
+                        type: String,
+                        validation: {
+                            equalTo: '@s.type.value'
+                        }
+                    })
+                }
+            ]
+        };
+
+        messages = t.chain(model, pattern).validate();
+        (messages === null).should.be.true;
+    });
+
+    it('test belongsTo validator', function () {
         var pattern = {
             sex: t.rule({
                 type: String,

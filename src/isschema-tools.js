@@ -226,8 +226,6 @@
             this.pattern = pattern;
         }
 
-        //--------------------------
-
         function traverse(obj, fn) {
             if (!(_.isObject(obj) && _.isFunction(fn))) {
                 throw new Error('First should be an Object, second should be a Function');
@@ -586,7 +584,7 @@
 
         _.extend(NodeValueInjector.prototype, {
             //Special symbols @s - spec symbol
-            _get: function (expression) {
+            _getSiblingValue: function (expression) {
                 var nodes = this._nodes;
                 var siblingPath = _.initial(this._currentNode.path).concat(expression.split('.'));
 
@@ -596,7 +594,6 @@
                     }
                 }
             },
-
             _getValuesByName: function (expression) {
                 var nodes = this._nodes;
                 var values = [];
@@ -609,12 +606,11 @@
 
                 return values;
             },
-
             get: function (expression) {
                 var hasSiblingPointer = expression.indexOf('@s') !== -1;
 
                 if (hasSiblingPointer) {
-                    var node = this._get(expression.replace('@s.', ''));
+                    var node = this._getSiblingValue(expression.replace('@s.', ''));
                     return node && node.value;
                 }
 
@@ -656,6 +652,7 @@
                     validatorName = keys[i];
                     validator = validators[validatorName];
                     args = params = validateObj[validatorName];
+                    validatorMessage = null;
 
                     if (!_.isFunction(validator)) {
                         throw new Error(_.format('Validator ${0} must be defined', validatorName));

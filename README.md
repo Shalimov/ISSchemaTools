@@ -46,8 +46,8 @@ This pack of the three following modules:
         -   **eqlLength**
         -   **range**
         -   **equalTo**
-        -   **belongsTo**
         -   **regex**
+        -   **belongsTo**
         
 ___
 

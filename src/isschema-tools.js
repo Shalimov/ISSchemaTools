@@ -740,6 +740,10 @@
             return _.isEmpty(val) || values.indexOf(val) !== -1;
         });
 
+        register('regex', function (val, regex) {
+            return  _.isEmpty(val) || regex.test(val);
+        });
+
         this.addMethodToChain('validate', validate);
 
         return {

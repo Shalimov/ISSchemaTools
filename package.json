@@ -1,6 +1,6 @@
 {
     "name": "isschematools",
-    "version": "0.4.9",
+    "version": "0.5.0",
     "description": "Package for Validate, Transform, and Clean object by Schemes",
     "main": "src/isschema-tools.js",
     "directories": {

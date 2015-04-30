@@ -323,4 +323,21 @@ describe('test validation module functionality', function () {
         messages = t.chain({sex: 'woman'}, pattern).validate();
         (messages === null).should.be.true;
     });
+
+    it('test regex validator', function () {
+        var pattern = {
+            sex: t.rule({
+                type: String,
+                validation: {
+                    regex: /^test$/i
+                }
+            })
+        };
+
+        var messages = t.chain({sex: 'test'}, pattern).validate();
+        (messages === null).should.be.true;
+
+        messages = t.chain({sex: 'atesta'}, pattern).validate();
+        (messages === null).should.be.false;
+    });
 });

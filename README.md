@@ -47,6 +47,7 @@ This pack of the three following modules:
         -   **range**
         -   **equalTo**
         -   **belongsTo**
+        -   **regex**
         
 ___
 

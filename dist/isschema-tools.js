@@ -1,7 +1,4 @@
 (function () {
-  //TODO: Added stage rules
-  //TODO: Added more detailed test & documentation
-  //TODO: Added performance tests
 
   var objFormatPattern = /\$\{(\w+)\}/g;
   var argsFormatPattern = /\$\{(\d+)\}/g;
@@ -318,7 +315,6 @@
       var compactCache = [];
       var nodes, target, allowNull, options;
 
-      //Method is invoked as part of chain
       if (this === chainNs) {
         nodes = this._nodes;
         options = arguments[0];
@@ -456,7 +452,6 @@
     return root;
   })();
 
-  //Transformers declaration
   ISSchemaTools.defineExtension('transform', function (_) {
     var self = this;
     var transformers = {};
@@ -583,7 +578,6 @@
     }
 
     _.extend(NodeValueInjector.prototype, {
-      //Special symbols @s - spec symbol
       _getSiblingValue: function (expression) {
         var nodes = this._nodes;
         var siblingPath = _.initial(this._currentNode.path).concat(expression.split('.'));
@@ -761,9 +755,6 @@
     };
   });
 
-  // Export the ISSchemaTools object for **Node.js**, with
-  // backwards-compatibility for the old `require()` API. If we're in
-  // the browser, add `ISSchemaTools` as a global object.
   if (typeof exports !== 'undefined') {
     if (typeof module !== 'undefined' && module.exports) {
       exports = module.exports = ISSchemaTools;
